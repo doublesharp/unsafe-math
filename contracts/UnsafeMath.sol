@@ -35,13 +35,13 @@ library UnsafeMath {
         }
     }
 
-    function increment(uint256 _uint256) internal pure returns (uint256) {
+    function inc(uint256 _uint256) internal pure returns (uint256) {
         unchecked {
             return ++_uint256;
         }
     }
 
-    function decrement(uint256 _uint256) internal pure returns (uint256) {
+    function dec(uint256 _uint256) internal pure returns (uint256) {
         unchecked {
             return --_uint256;
         }
@@ -78,13 +78,13 @@ library UnsafeMath {
         }
     }
 
-    function increment(int256 _int256) internal pure returns (int256) {
+    function inc(int256 _int256) internal pure returns (int256) {
         unchecked {
             return ++_int256;
         }
     }
 
-    function decrement(int256 _int256) internal pure returns (int256) {
+    function dec(int256 _int256) internal pure returns (int256) {
         unchecked {
             return --_int256;
         }

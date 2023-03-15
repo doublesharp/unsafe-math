@@ -26,6 +26,22 @@ contract ContractA {
   function add(uint256 a, uint256 b) external returns (uint256) {
     return a.add(b);
   }
+
+  function while(uint256 times) external {
+      uint256 _iter = times;
+      while (_iter != 0) {
+        _iter = _iter.dec();
+        int64 _int64 = int64(_iter);
+        // ...
+    }
+  }
+
+  function for(uint256 times) external {
+    for (uint256 _iter; iter < times; _iter = _iter.inc()) {
+        int64 _int64 = int64(_iter);
+        // ...
+    }
+  }
 }
 ```
 
@@ -67,7 +83,7 @@ contract ContractA {
 
   function for(uint256 times) external {
     U256 _times = U256.wrap(times);
-    for (U256 _iter; iter < _times; _times = _times.inc()) {
+    for (U256 _iter; iter < _times; _iter = _iter.inc()) {
         uint256 _uint256 = _iter.asUint256();
         int64 _int64 = _iter.asInt64();
         // ...

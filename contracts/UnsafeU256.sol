@@ -64,11 +64,11 @@ library UnsafeU256 {
     }
 
     function inc(U256 _u256) internal pure returns (U256) {
-        return U256.wrap(U256.unwrap(_u256).increment());
+        return U256.wrap(U256.unwrap(_u256).inc());
     }
 
     function dec(U256 _u256) internal pure returns (U256) {
-        return U256.wrap(U256.unwrap(_u256).decrement());
+        return U256.wrap(U256.unwrap(_u256).dec());
     }
 
     function add(U256 _u256, uint256 _addend) internal pure returns (U256) {
