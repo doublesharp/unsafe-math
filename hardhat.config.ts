@@ -23,8 +23,6 @@ import 'hardhat-storage-layout';
 
 import 'solidity-coverage';
 
-import '@openzeppelin/hardhat-upgrades';
-
 const { PRIVATE_KEY, REPORT_GAS, GAS_TOKEN, GAS_CURRENCY } = process.env;
 
 /**
