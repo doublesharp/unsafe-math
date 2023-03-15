@@ -122,7 +122,7 @@ contract ContractA {
   }
 
   function sub(uint256 a, uint256 b) external returns (uint256) {
-    return (a.asU256() - a.asU256()).asUint256();
+    return (a.asU256() - b.asU256()).asUint256();
   }
 }
 ```
@@ -139,11 +139,14 @@ contract ContractB {
   using UnsafeI256 for int256;
 
   function add(int256 a, uint256 b) external returns (int256) {
-    return a.asI256().add(int256(b)).asInt256();
+    I256 _a = a.asI256();
+    return _a.add(int256(b)).asInt256();
   }
 
   function sub(uint256 a, uint256 b) external returns (int256) {
-    return (a.asI256() - a.asI256()).asInt256();
+    I256 _a = a.asI256();
+    I256 _b = b.asI256();
+    return (a - b).asInt256();
   }
 }
 ```
