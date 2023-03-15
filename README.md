@@ -18,7 +18,7 @@ yarn add -D unsafe-math
 ### `uint256`
 
 ```solidity
-import { UnsafeMath } from 'unsafe-math/contracts/UnsafeMath.sol';
+import { UnsafeMath } from '@0xdoublesharp/unsafe-math/contracts/UnsafeMath.sol';
 
 contract ContractA {
   using UnsafeMath for uint256;
@@ -32,7 +32,7 @@ contract ContractA {
 ### `int256`
 
 ```solidity
-import { UnsafeMath } from 'unsafe-math/contracts/UnsafeMath.sol';
+import { UnsafeMath } from '@0xdoublesharp/unsafe-math/contracts/UnsafeMath.sol';
 
 contract ContractB {
   using UnsafeMath for int256;
@@ -48,7 +48,7 @@ contract ContractB {
 ### `U256`
 
 ```solidity
-import {U256} from 'unsafe-math/contracts/types/U256.sol';
+import {U256} from '@0xdoublesharp/unsafe-math/contracts/types/U256.sol';
 
 contract ContractA {
   function add(uint256 a, uint256 b) external returns (uint256) {
@@ -79,7 +79,7 @@ contract ContractA {
 ### `I256`
 
 ```solidity
-import { I256 } from 'unsafe-math/contracts/types/I256.sol';
+import { I256 } from '@0xdoublesharp/unsafe-math/contracts/types/I256.sol';
 
 contract ContractB {
   function add(int256 a, int256 b) external returns (int256) {
@@ -93,8 +93,8 @@ contract ContractB {
 ### `UnsafeU256`
 
 ```solidity
-import { UnsafeI256 } from 'unsafe-math/contracts/UnsafeU256.sol';
-import { I256 } from 'unsafe-math/contracts/types/U256.sol';
+import { UnsafeI256 } from '@0xdoublesharp/unsafe-math/contracts/UnsafeU256.sol';
+import { I256 } from '@0xdoublesharp/unsafe-math/contracts/types/U256.sol';
 
 contract ContractA {
   using UnsafeU256 for U256;
@@ -114,8 +114,8 @@ contract ContractA {
 ### `UnsafeI256`
 
 ```solidity
-import { UnsafeI256 } from 'unsafe-math/contracts/UnsafeI256.sol';
-import { I256 } from 'unsafe-math/contracts/types/I256.sol';
+import { UnsafeI256 } from '@0xdoublesharp/unsafe-math/contracts/UnsafeI256.sol';
+import { I256 } from '@0xdoublesharp/unsafe-math/contracts/types/I256.sol';
 
 contract ContractB {
   using UnsafeI256 for I256;
