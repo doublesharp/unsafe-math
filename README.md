@@ -37,7 +37,7 @@ contract ContractA {
   }
 
   function for(uint256 times) external pure {
-    for (uint256 _iter; iter < times; _iter = _iter.inc()) {
+    for (uint256 _iter; _iter < times; _iter = _iter.inc()) {
         int64 _int64 = int64(_iter);
         // ...
     }
@@ -83,7 +83,7 @@ contract ContractA {
 
   function for(uint256 times) external pure {
     U256 _times = U256.wrap(times);
-    for (U256 _iter; iter < _times; _iter = _iter.inc()) {
+    for (U256 _iter; _iter < _times; _iter = _iter.inc()) {
         uint256 _uint256 = _iter.asUint256();
         int64 _int64 = _iter.asInt64();
         // ...
