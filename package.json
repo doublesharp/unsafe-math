@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "description": "Unchecked uint256 and int256 math operations for Solidity 0.8",
   "scripts": {
-    "compile": "hardhat compile"
+    "compile": "npx hardhat compile"
   },
-  "keywords": ["solidity", "unchecked", "math", "uint256", "int256"],
+  "keywords": ["solidity", "unchecked", "unchecked-math", "unsafe-math", "math", "uint256", "int256", "U256", "I256"],
   "author": "@0xDoubleSharp",
   "license": "MIT",
   "devDependencies": {
