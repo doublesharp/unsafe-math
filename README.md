@@ -109,8 +109,8 @@ contract ContractB {
 ### `UnsafeU256`
 
 ```solidity
-import { UnsafeI256 } from '@0xdoublesharp/unsafe-math/contracts/UnsafeU256.sol';
-import { I256 } from '@0xdoublesharp/unsafe-math/contracts/types/U256.sol';
+import { UnsafeU256 } from '@0xdoublesharp/unsafe-math/contracts/UnsafeU256.sol';
+import { U256 } from '@0xdoublesharp/unsafe-math/contracts/types/U256.sol';
 
 contract ContractA {
   using UnsafeU256 for U256;
