@@ -7,11 +7,11 @@ import {I256} from './types/I256.sol';
 library UnsafeI256 {
     using UnsafeMath for int256;
 
-    function asUI256(int256 _i256) internal pure returns (I256) {
+    function asI256(int256 _i256) internal pure returns (I256) {
         return I256.wrap(_i256);
     }
 
-    function asUI256(uint256 _i256) internal pure returns (I256) {
+    function asI256(uint256 _i256) internal pure returns (I256) {
         return I256.wrap(int256(_i256));
     }
 
