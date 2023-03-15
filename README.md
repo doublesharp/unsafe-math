@@ -6,11 +6,11 @@ Gas savings can be realized when it is already known that the results will not o
 ## Install
 
 ```shell
-npm install -D unsafe-math
+npm install -D @0xdoublesharp/unsafe-math
 ```
 
 ```shell
-yarn add -D unsafe-math
+yarn add -D @0xdoublesharp/unsafe-math
 ```
 
 ## UnsafeMath
