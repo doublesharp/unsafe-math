@@ -51,28 +51,28 @@ contract ContractB {
 import {U256} from 'unsafe-math/contracts/types/U256.sol';
 
 contract ContractA {
-	function add(uint256 a, uint256 b) external returns (uint256) {
-	    return (U256.wrap(a) - U256.wrap(b)).asUint256();
-	}
+  function add(uint256 a, uint256 b) external returns (uint256) {
+      return (U256.wrap(a) - U256.wrap(b)).asUint256();
+  }
 
-	function while(uint256 times) external {
-	    U256 _iter = U256.wrap(times);
-	    while (_iter.neq(0)) {
-		    _iter = _iter.dec();
-		    uint256 _uint256 = _iter.asUint256();
-		    int64 _int64 = _iter.asInt64();
-		    // ...
-		}
-	}
+  function while(uint256 times) external {
+      U256 _iter = U256.wrap(times);
+      while (_iter.neq(0)) {
+        _iter = _iter.dec();
+        uint256 _uint256 = _iter.asUint256();
+        int64 _int64 = _iter.asInt64();
+        // ...
+    }
+  }
 
-	function for(uint256 times) external {
-		U256 _times = U256.wrap(times);
-	    for (U256 _iter; iter < _times; _times = _times.inc()) {
-		    uint256 _uint256 = _iter.asUint256();
-		    int64 _int64 = _iter.asInt64();
-		    // ...
-		}
-	}
+  function for(uint256 times) external {
+    U256 _times = U256.wrap(times);
+    for (U256 _iter; iter < _times; _times = _times.inc()) {
+        uint256 _uint256 = _iter.asUint256();
+        int64 _int64 = _iter.asInt64();
+        // ...
+    }
+  }
 }
 ```
 
