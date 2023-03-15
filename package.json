@@ -1,0 +1,52 @@
+{
+  "name": "unsafe-math",
+  "version": "1.0.0",
+  "description": "Unchecked uint256 and int256 math operations for Solidity 0.8",
+  "scripts": {
+    "compile": "hardhat compile"
+  },
+  "keywords": ["solidity", "unchecked", "math", "uint256", "int256"],
+  "author": "@0xDoubleSharp",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
+    "@nomiclabs/hardhat-ethers": "2.2.2",
+    "@nomiclabs/hardhat-etherscan": "3.1.7",
+    "@nomiclabs/hardhat-solhint": "^3.0.0",
+    "@typechain/ethers-v5": "^10.2.0",
+    "@typechain/hardhat": "^6.1.5",
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^18.15.3",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "chai": "4.3.7",
+    "dotenv": "16.0.3",
+    "eslint": "8.36.0",
+    "eslint-config-prettier": "8.7.0",
+    "hardhat": "^2.13.0",
+    "hardhat-abi-exporter": "^2.10.1",
+    "hardhat-contract-sizer": "^2.8.0",
+    "hardhat-deploy": "^0.11.25",
+    "hardhat-deploy-ethers": "^0.3.0-beta.13",
+    "hardhat-gas-reporter": "^1.0.9",
+    "hardhat-spdx-license-identifier": "^2.1.0",
+    "hardhat-storage-layout": "^0.1.7",
+    "hardhat-tracer": "^2.1.2",
+    "hardhat-watcher": "^2.5.0",
+    "prettier": "2.8.4",
+    "prettier-plugin-solidity": "1.1.3",
+    "solhint": "3.4.1",
+    "solhint-plugin-prettier": "^0.0.5",
+    "solidity-coverage": "0.8.2",
+    "ts-generator": "^0.1.1",
+    "ts-node": "~10.9.1",
+    "tslint": "~6.1.3",
+    "typechain": "^8.1.1",
+    "typescript": "4.9"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

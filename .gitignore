@@ -1,0 +1,13 @@
+node_modules
+.env
+coverage
+coverage.json
+typechain
+.vscode
+.openzeppelin
+
+#Hardhat files
+/cache
+/artifacts
+/.openzeppelin
+/typechain-types

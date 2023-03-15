@@ -1,0 +1,12 @@
+{
+  "extends": "./tslint_default.json",
+  "rules": {
+    "directive-selector": [true, "attribute", "app", "camelCase"],
+    "component-selector": [true, "element", "app", "page", "kebab-case"],
+    "curly": [true, "ignore-same-line"],
+    "no-inferrable-types": false,
+    "quotemark": [true, "single"],
+    "no-string-literal": true,
+    "no-console": [false]
+  }
+}
