@@ -4,6 +4,7 @@
   "description": "Unchecked uint256 and int256 math operations for Solidity 0.8",
   "repository": "https://github.com/doublesharp/unsafe-math",
   "scripts": {
+    "preinstall": "git submodule update --init --recursive && cd modules/parser && npx -y shx test -d \"./dist\" && echo \"@solidity-parser/parser already built\" || (npm install && npm run build:node && npm run build:browser && npm run generate-types && npx shx mkdir -p dist/antlr && npx shx cp \"./src/antlr/*tokens\" dist/antlr)",
     "compile": "npx hardhat compile"
   },
   "keywords": ["solidity", "unchecked", "unchecked-math", "unsafe-math", "math", "uint256", "int256", "U256", "I256"],
