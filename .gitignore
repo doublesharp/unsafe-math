@@ -10,4 +10,5 @@ typechain
 /cache
 /artifacts
 /.openzeppelin
-/typechain-types
+/sdk
+
