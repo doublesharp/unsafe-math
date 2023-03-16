@@ -2,6 +2,7 @@
   "name": "@0xdoublesharp/unsafe-math",
   "version": "0.0.8",
   "description": "Unchecked uint256 and int256 math operations for Solidity 0.8",
+  "repository": "https://github.com/doublesharp/unsafe-math",
   "scripts": {
     "compile": "npx hardhat compile"
   },
