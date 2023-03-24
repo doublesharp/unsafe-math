@@ -25,14 +25,12 @@ library UnsafeMath {
     }
 
     function div(uint256 _uint256, uint256 _divisor) internal pure returns (uint256) {
-        unchecked {
-            uint256 result;
-            // solhint-disable-next-line no-inline-assembly
-            assembly {
-                result := div(_uint256, _divisor)
-            }
-            return result;
+        uint256 result;
+        // solhint-disable-next-line no-inline-assembly
+        assembly {
+            result := div(_uint256, _divisor)
         }
+        return result;
     }
 
     function inc(uint256 _uint256) internal pure returns (uint256) {

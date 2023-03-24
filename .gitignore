@@ -6,9 +6,11 @@ typechain
 .vscode
 .openzeppelin
 
+# fix for coverage with 0.8.19
+/modules
+
 #Hardhat files
 /cache
 /artifacts
 /.openzeppelin
 /sdk
-
