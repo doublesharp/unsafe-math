@@ -122,7 +122,13 @@ contract TestUint256 {
         gasUsed -= gasleft();
     }
 
-    function asUints(uint256 a) external pure returns (uint8 _uint8, uint16 _uint16, uint32 _uint32, uint64 _uint64, uint128 _uint128, uint256 _uint256) {
+    function asUints(
+        uint256 a
+    )
+        external
+        pure
+        returns (uint8 _uint8, uint16 _uint16, uint32 _uint32, uint64 _uint64, uint128 _uint128, uint256 _uint256)
+    {
         _uint8 = uint8(a);
         _uint16 = uint16(a);
         _uint32 = uint32(a);
@@ -131,7 +137,9 @@ contract TestUint256 {
         _uint256 = uint256(a);
     }
 
-    function asInts(uint256 a) external pure returns (int8 _int8, int16 _int16, int32 _int32, int64 _int64, int128 _int128, int256 _int256) {
+    function asInts(
+        uint256 a
+    ) external pure returns (int8 _int8, int16 _int16, int32 _int32, int64 _int64, int128 _int128, int256 _int256) {
         _int8 = int8(int256(a));
         _int16 = int16(int256(a));
         _int32 = int32(int256(a));

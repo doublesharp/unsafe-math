@@ -99,7 +99,13 @@ contract TestUnsafeI256 {
         gasUsed -= gasleft();
     }
 
-    function asUints(I256 a) external pure returns (uint8 _uint8, uint16 _uint16, uint32 _uint32, uint64 _uint64, uint128 _uint128, uint256 _uint256) {
+    function asUints(
+        I256 a
+    )
+        external
+        pure
+        returns (uint8 _uint8, uint16 _uint16, uint32 _uint32, uint64 _uint64, uint128 _uint128, uint256 _uint256)
+    {
         _uint8 = a.asUint8();
         _uint16 = a.asUint16();
         _uint32 = a.asUint32();
@@ -108,7 +114,9 @@ contract TestUnsafeI256 {
         _uint256 = a.asUint256();
     }
 
-    function asInts(I256 a) external pure returns (int8 _int8, int16 _int16, int32 _int32, int64 _int64, int128 _int128, int256 _int256) {
+    function asInts(
+        I256 a
+    ) external pure returns (int8 _int8, int16 _int16, int32 _int32, int64 _int64, int128 _int128, int256 _int256) {
         _int8 = a.asInt8();
         _int16 = a.asInt16();
         _int32 = a.asInt32();
