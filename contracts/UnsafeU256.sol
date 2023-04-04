@@ -63,14 +63,6 @@ library UnsafeU256 {
         return int8(int256(U256.unwrap(_u256)));
     }
 
-    function inc(U256 _u256) internal pure returns (U256) {
-        return U256.wrap(U256.unwrap(_u256).inc());
-    }
-
-    function dec(U256 _u256) internal pure returns (U256) {
-        return U256.wrap(U256.unwrap(_u256).dec());
-    }
-
     function add(U256 _u256, uint256 _addend) internal pure returns (U256) {
         return U256.wrap(U256.unwrap(_u256).add(_addend));
     }
@@ -85,6 +77,38 @@ library UnsafeU256 {
 
     function div(U256 _u256, uint256 _divisor) internal pure returns (U256) {
         return U256.wrap(U256.unwrap(_u256).div(_divisor));
+    }
+
+    function mod(U256 _u256, uint256 _divisor) internal pure returns (U256) {
+        return U256.wrap(U256.unwrap(_u256).mod(_divisor));
+    }
+
+    function exp(U256 _u256, uint256 _exponent) internal pure returns (U256) {
+        return U256.wrap(U256.unwrap(_u256).exp(_exponent));
+    }
+
+    function rshift(U256 _u256, uint256 _shift) internal pure returns (U256) {
+        return U256.wrap(U256.unwrap(_u256) >> _shift);
+    }
+
+    function lshift(U256 _u256, uint256 _shift) internal pure returns (U256) {
+        return U256.wrap(U256.unwrap(_u256) << _shift);
+    }
+
+    function and(U256 _u256, uint256 _value) internal pure returns (U256) {
+        return _u256 & U256.wrap(_value);
+    }
+
+    function or(U256 _u256, uint256 _value) internal pure returns (U256) {
+        return _u256 | U256.wrap(_value);
+    }
+
+    function xor(U256 _u256, uint256 _value) internal pure returns (U256) {
+        return _u256 ^ U256.wrap(_value);
+    }
+
+    function not(U256 _u256) internal pure returns (U256) {
+        return ~_u256;
     }
 
     function neq(U256 _u256, uint256 _value) internal pure returns (bool) {

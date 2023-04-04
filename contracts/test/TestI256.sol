@@ -30,15 +30,69 @@ contract TestI256 {
         gasUsed -= gasleft();
     }
 
-    function inc(I256 a) external view returns (uint256 gasUsed, I256 result) {
+    function mod(I256 a, I256 b) external view returns (uint256 gasUsed, I256 result) {
         gasUsed = gasleft();
-        result = a + ONE;
+        result = a % b;
         gasUsed -= gasleft();
     }
 
-    function dec(I256 a) external view returns (uint256 gasUsed, I256 result) {
+    function and(I256 a, I256 b) external view returns (uint256 gasUsed, I256 result) {
         gasUsed = gasleft();
-        result = a - ONE;
+        result = a & b;
+        gasUsed -= gasleft();
+    }
+
+    function or(I256 a, I256 b) external view returns (uint256 gasUsed, I256 result) {
+        gasUsed = gasleft();
+        result = a | b;
+        gasUsed -= gasleft();
+    }
+
+    function xor(I256 a, I256 b) external view returns (uint256 gasUsed, I256 result) {
+        gasUsed = gasleft();
+        result = a ^ b;
+        gasUsed -= gasleft();
+    }
+
+    function not(I256 a) external view returns (uint256 gasUsed, I256 result) {
+        gasUsed = gasleft();
+        result = ~a;
+        gasUsed -= gasleft();
+    }
+
+    function eq(I256 a, I256 b) external view returns (uint256 gasUsed, bool result) {
+        gasUsed = gasleft();
+        result = a == b;
+        gasUsed -= gasleft();
+    }
+
+    function neq(I256 a, I256 b) external view returns (uint256 gasUsed, bool result) {
+        gasUsed = gasleft();
+        result = a != b;
+        gasUsed -= gasleft();
+    }
+
+    function lt(I256 a, I256 b) external view returns (uint256 gasUsed, bool result) {
+        gasUsed = gasleft();
+        result = a < b;
+        gasUsed -= gasleft();
+    }
+
+    function lte(I256 a, I256 b) external view returns (uint256 gasUsed, bool result) {
+        gasUsed = gasleft();
+        result = a <= b;
+        gasUsed -= gasleft();
+    }
+
+    function gt(I256 a, I256 b) external view returns (uint256 gasUsed, bool result) {
+        gasUsed = gasleft();
+        result = a > b;
+        gasUsed -= gasleft();
+    }
+
+    function gte(I256 a, I256 b) external view returns (uint256 gasUsed, bool result) {
+        gasUsed = gasleft();
+        result = a >= b;
         gasUsed -= gasleft();
     }
 }

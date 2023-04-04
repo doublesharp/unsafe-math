@@ -33,6 +33,24 @@ library UnsafeMath {
         return result;
     }
 
+    function mod(uint256 _uint256, uint256 _divisor) internal pure returns (uint256) {
+        uint256 result;
+        // solhint-disable-next-line no-inline-assembly
+        assembly {
+            result := mod(_uint256, _divisor)
+        }
+        return result;
+    }
+
+    function exp(uint256 _uint256, uint256 _exponent) internal pure returns (uint256) {
+        uint256 result;
+        // solhint-disable-next-line no-inline-assembly
+        assembly {
+            result := exp(_uint256, _exponent)
+        }
+        return result;
+    }
+
     function inc(uint256 _uint256) internal pure returns (uint256) {
         unchecked {
             return ++_uint256;
@@ -66,14 +84,21 @@ library UnsafeMath {
     }
 
     function div(int256 _int256, int256 _divisor) internal pure returns (int256) {
-        unchecked {
-            int256 result;
-            // solhint-disable-next-line no-inline-assembly
-            assembly {
-                result := sdiv(_int256, _divisor)
-            }
-            return result;
+        int256 result;
+        // solhint-disable-next-line no-inline-assembly
+        assembly {
+            result := sdiv(_int256, _divisor)
         }
+        return result;
+    }
+
+    function mod(int256 _int256, int256 _divisor) internal pure returns (int256) {
+        int256 result;
+        // solhint-disable-next-line no-inline-assembly
+        assembly {
+            result := smod(_int256, _divisor)
+        }
+        return result;
     }
 
     function inc(int256 _int256) internal pure returns (int256) {
