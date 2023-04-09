@@ -63,14 +63,6 @@ library UnsafeI256 {
         return uint8(uint256(I256.unwrap(_i256)));
     }
 
-    function inc(I256 _i256) internal pure returns (I256) {
-        return I256.wrap(I256.unwrap(_i256).inc());
-    }
-
-    function dec(I256 _i256) internal pure returns (I256) {
-        return I256.wrap(I256.unwrap(_i256).dec());
-    }
-
     function add(I256 _i256, int256 _addend) internal pure returns (I256) {
         return I256.wrap(I256.unwrap(_i256).add(_addend));
     }
@@ -85,6 +77,26 @@ library UnsafeI256 {
 
     function div(I256 _i256, int256 _divisor) internal pure returns (I256) {
         return I256.wrap(I256.unwrap(_i256).div(_divisor));
+    }
+
+    function mod(I256 _i256, int256 _divisor) internal pure returns (I256) {
+        return I256.wrap(I256.unwrap(_i256).mod(_divisor));
+    }
+
+    function and(I256 _i256, int256 _value) internal pure returns (I256) {
+        return I256.wrap(I256.unwrap(_i256) & _value);
+    }
+
+    function or(I256 _i256, int256 _value) internal pure returns (I256) {
+        return I256.wrap(I256.unwrap(_i256) | _value);
+    }
+
+    function xor(I256 _i256, int256 _value) internal pure returns (I256) {
+        return I256.wrap(I256.unwrap(_i256) ^ _value);
+    }
+
+    function not(I256 _i256) internal pure returns (I256) {
+        return I256.wrap(~I256.unwrap(_i256));
     }
 
     function neq(I256 _i256, int256 _value) internal pure returns (bool) {

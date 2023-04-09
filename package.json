@@ -1,6 +1,6 @@
 {
   "name": "@0xdoublesharp/unsafe-math",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Unchecked uint256 and int256 math operations for Solidity 0.8",
   "repository": "https://github.com/doublesharp/unsafe-math",
   "scripts": {
@@ -21,12 +21,12 @@
     "@typechain/hardhat": "^6.1.5",
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^18.15.6",
-    "@typescript-eslint/eslint-plugin": "^5.56.0",
-    "@typescript-eslint/parser": "^5.56.0",
+    "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
     "chai": "4.3.7",
     "dotenv": "16.0.3",
-    "eslint": "8.36.0",
+    "eslint": "8.37.0",
     "eslint-config-prettier": "8.8.0",
     "hardhat": "^2.13.0",
     "hardhat-abi-exporter": "^2.10.1",
@@ -36,9 +36,9 @@
     "hardhat-gas-reporter": "^1.0.9",
     "hardhat-spdx-license-identifier": "^2.1.0",
     "hardhat-storage-layout": "^0.1.7",
-    "hardhat-tracer": "^2.1.2",
+    "hardhat-tracer": "^2.2.2",
     "hardhat-watcher": "^2.5.0",
-    "prettier": "2.8.6",
+    "prettier": "2.8.7",
     "prettier-plugin-solidity": "1.1.3",
     "solhint": "3.4.1",
     "solhint-plugin-prettier": "^0.0.5",
@@ -47,6 +47,13 @@
     "ts-node": "~10.9.1",
     "tslint": "~6.1.3",
     "typechain": "^8.1.1",
-    "typescript": "5.0.2"
+    "typescript": "5.0.3"
+  },
+  "resolutions": {
+    "prettier-plugin-solidity/@solidity-parser/parser": "./modules/parser",
+    "solhint/@solidity-parser/parser": "./modules/parser",
+    "sol2uml/@solidity-parser/parser": "./modules/parser",
+    "solidity-coverage/@solidity-parser/parser": "./modules/parser",
+    "hardhat/solc": "^0.8.19"
   }
 }

@@ -12,12 +12,17 @@ using {
     sub as -,
     mul as *,
     div as /,
+    mod as %,
     neq as !=,
     eq as ==,
     lt as <,
     lte as <=,
     gt as >,
-    gte as >=
+    gte as >=,
+    and as &,
+    or as |,
+    xor as ^,
+    not as ~
 } for U256 global;
 
 function add(U256 _u256, U256 _addend) pure returns (U256) {
@@ -34,6 +39,26 @@ function mul(U256 _u256, U256 _multiplier) pure returns (U256) {
 
 function div(U256 _u256, U256 _divisor) pure returns (U256) {
     return U256.wrap(U256.unwrap(_u256).div(U256.unwrap(_divisor)));
+}
+
+function mod(U256 _u256, U256 _divisor) pure returns (U256) {
+    return U256.wrap(U256.unwrap(_u256).mod(U256.unwrap(_divisor)));
+}
+
+function and(U256 _u256, U256 _mask) pure returns (U256) {
+    return U256.wrap(U256.unwrap(_u256) & U256.unwrap(_mask));
+}
+
+function or(U256 _u256, U256 _mask) pure returns (U256) {
+    return U256.wrap(U256.unwrap(_u256) | U256.unwrap(_mask));
+}
+
+function xor(U256 _u256, U256 _mask) pure returns (U256) {
+    return U256.wrap(U256.unwrap(_u256) ^ U256.unwrap(_mask));
+}
+
+function not(U256 _u256) pure returns (U256) {
+    return U256.wrap(~U256.unwrap(_u256));
 }
 
 function neq(U256 _u256, U256 _bounds) pure returns (bool) {

@@ -12,12 +12,17 @@ using {
     sub as -,
     mul as *,
     div as /,
+    mod as %,
     neq as !=,
     eq as ==,
     lt as <,
     lte as <=,
     gt as >,
-    gte as >=
+    gte as >=,
+    and as &,
+    or as |,
+    xor as ^,
+    not as ~
 } for I256 global;
 
 function add(I256 _i256, I256 _addend) pure returns (I256) {
@@ -34,6 +39,26 @@ function mul(I256 _i256, I256 _multiplier) pure returns (I256) {
 
 function div(I256 _i256, I256 _divisor) pure returns (I256) {
     return I256.wrap(I256.unwrap(_i256).div(I256.unwrap(_divisor)));
+}
+
+function mod(I256 _i256, I256 _divisor) pure returns (I256) {
+    return I256.wrap(I256.unwrap(_i256).mod(I256.unwrap(_divisor)));
+}
+
+function and(I256 _i256, I256 _mask) pure returns (I256) {
+    return I256.wrap(I256.unwrap(_i256) & I256.unwrap(_mask));
+}
+
+function or(I256 _i256, I256 _mask) pure returns (I256) {
+    return I256.wrap(I256.unwrap(_i256) | I256.unwrap(_mask));
+}
+
+function xor(I256 _i256, I256 _mask) pure returns (I256) {
+    return I256.wrap(I256.unwrap(_i256) ^ I256.unwrap(_mask));
+}
+
+function not(I256 _i256) pure returns (I256) {
+    return I256.wrap(~I256.unwrap(_i256));
 }
 
 function neq(I256 _i256, I256 _bounds) pure returns (bool) {

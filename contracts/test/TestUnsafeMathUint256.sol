@@ -30,6 +30,18 @@ contract TestUnsafeMathUint256 {
         gasUsed -= gasleft();
     }
 
+    function exp(uint256 a, uint256 b) external view returns (uint256 gasUsed, uint256 result) {
+        gasUsed = gasleft();
+        result = a.exp(b);
+        gasUsed -= gasleft();
+    }
+
+    function mod(uint256 a, uint256 b) external view returns (uint256 gasUsed, uint256 result) {
+        gasUsed = gasleft();
+        result = a.mod(b);
+        gasUsed -= gasleft();
+    }
+
     function inc(uint256 a) external view returns (uint256 gasUsed, uint256 result) {
         gasUsed = gasleft();
         result = a.inc();
