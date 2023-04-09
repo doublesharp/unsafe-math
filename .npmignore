@@ -1,0 +1,32 @@
+node_modules
+.env
+coverage
+coverage.json
+typechain
+.vscode
+.openzeppelin
+
+# fix for coverage with 0.8.19
+/modules
+
+#Hardhat files
+/cache
+/artifacts
+/.openzeppelin
+/sdk
+
+/contracts/test
+/test
+.eslintignore
+.gitignore
+.gitmodules
+.prettierignore
+.prettierrc
+.solcover.js
+.solhint.json
+.solhintignore
+hardhat.config.ts
+resolutions.json
+slither.config.json
+tsconfig.json
+tslint.json
