@@ -48,18 +48,18 @@ contract ContractA {
   }
 
   function while(uint256 times) external pure {
-      uint256 _iter = times;
-      while (_iter != 0) {
-        _iter = _iter.dec();
-        int64 _int64 = int64(_iter);
-        // ...
+    uint256 _iter = times;
+    while (_iter != 0) {
+      _iter = _iter.dec();
+      int64 _int64 = int64(_iter);
+      // ...
     }
   }
 
   function for(uint256 times) external pure {
     for (uint256 _iter; _iter < times; _iter = _iter.inc()) {
-        int64 _int64 = int64(_iter);
-        // ...
+      int64 _int64 = int64(_iter);
+      // ...
     }
   }
 }
@@ -267,7 +267,7 @@ The `U256` user defined type can perform unchecked math operations using overloa
   - `_u256 ^ _u256`: bitwise XOR on U256
   - `~_u256`: bitwise NOT on U256
 
-#### Example
+##### Example
 
 ```solidity
 import { U256 } from '@0xdoublesharp/unsafe-math/contracts/types/U256.sol';
@@ -278,27 +278,27 @@ contract ContractA {
   }
 
   function while(uint256 times) external pure {
-      U256 _iter = U256.wrap(times);
-      while (_iter.neq(0)) {
-        _iter = _iter.dec();
-        uint256 _uint256 = _iter.asUint256();
-        int64 _int64 = _iter.asInt64();
-        // ...
+    U256 _iter = U256.wrap(times);
+    while (_iter.neq(0)) {
+      _iter = _iter.dec();
+      uint256 _uint256 = _iter.asUint256();
+      int64 _int64 = _iter.asInt64();
+      // ...
     }
   }
 
   function for(uint256 times) external pure {
     U256 _times = U256.wrap(times);
     for (U256 _iter; _iter < _times; _iter = _iter.inc()) {
-        uint256 _uint256 = _iter.asUint256();
-        int64 _int64 = _iter.asInt64();
-        // ...
+      uint256 _uint256 = _iter.asUint256();
+      int64 _int64 = _iter.asInt64();
+      // ...
     }
   }
 }
 ```
 
-### `I256`
+### User Definited Type `I256`
 
 The `I256` user defined type can perform unchecked math operations using overloaded operators.
 
@@ -323,7 +323,7 @@ The `I256` user defined type can perform unchecked math operations using overloa
   - `_i256 ^ _i256`: bitwise XOR on I256
   - `~_i256`: bitwise NOT on I256
 
-#### Example
+##### Example
 
 ```solidity
 import { I256 } from '@0xdoublesharp/unsafe-math/contracts/types/I256.sol';
@@ -334,8 +334,6 @@ contract ContractB {
   }
 }
 ```
-
-
 
 ## Gas Usage Optimization Disabled
 

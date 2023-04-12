@@ -1,6 +1,6 @@
 {
   "name": "@0xdoublesharp/unsafe-math",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Unchecked uint256 and int256 math operations for Solidity 0.8",
   "repository": "https://github.com/doublesharp/unsafe-math",
   "scripts": {
