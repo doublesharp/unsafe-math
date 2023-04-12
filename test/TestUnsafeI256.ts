@@ -47,6 +47,26 @@ describe('UnsafeI256', () => {
       assertSavesGas(safeGas, unsafeGas);
     });
 
+    it('Inc', async () => {
+      const { testInt256, testUnsafeI256 } = await loadFixture(fixtures);
+
+      [safeGas, safeResult] = await testInt256.inc(2);
+      [unsafeGas, unsafeResult] = await testUnsafeI256.inc(2);
+
+      expect(safeResult).to.equal(unsafeResult);
+      assertSavesGas(safeGas, unsafeGas);
+    });
+
+    it('Dec', async () => {
+      const { testInt256, testUnsafeI256 } = await loadFixture(fixtures);
+
+      [safeGas, safeResult] = await testInt256.dec(2);
+      [unsafeGas, unsafeResult] = await testUnsafeI256.dec(2);
+
+      expect(safeResult).to.equal(unsafeResult);
+      assertSavesGas(safeGas, unsafeGas);
+    });
+
     it('Mul', async () => {
       const { testInt256, testUnsafeI256 } = await loadFixture(fixtures);
 

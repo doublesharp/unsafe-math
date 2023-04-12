@@ -71,6 +71,14 @@ library UnsafeU256 {
         return U256.wrap(U256.unwrap(_u256).sub(_subtrahend));
     }
 
+    function inc(U256 _u256) internal pure returns (U256) {
+        return U256.wrap(U256.unwrap(_u256).inc());
+    }
+
+    function dec(U256 _u256) internal pure returns (U256) {
+        return U256.wrap(U256.unwrap(_u256).dec());
+    }
+
     function mul(U256 _u256, uint256 _multiplier) internal pure returns (U256) {
         return U256.wrap(U256.unwrap(_u256).mul(_multiplier));
     }
@@ -85,6 +93,14 @@ library UnsafeU256 {
 
     function exp(U256 _u256, uint256 _exponent) internal pure returns (U256) {
         return U256.wrap(U256.unwrap(_u256).exp(_exponent));
+    }
+
+    function rshift(U256 _u256, U256 _shift) internal pure returns (U256) {
+        return U256.wrap(U256.unwrap(_u256) >> U256.unwrap(_shift));
+    }
+
+    function lshift(U256 _u256, U256 _shift) internal pure returns (U256) {
+        return U256.wrap(U256.unwrap(_u256) << U256.unwrap(_shift));
     }
 
     function rshift(U256 _u256, uint256 _shift) internal pure returns (U256) {
