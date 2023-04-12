@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import {I256} from '../types/I256.sol';
+import {I256} from '../UnsafeMath.sol';
 
 contract TestI256 {
     I256 private constant ONE = I256.wrap(1);
