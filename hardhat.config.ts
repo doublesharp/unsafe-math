@@ -23,12 +23,14 @@ import 'hardhat-storage-layout';
 
 import 'solidity-coverage';
 
+import type { HardhatUserConfig } from 'hardhat/config';
+
 const { PRIVATE_KEY, REPORT_GAS, GAS_TOKEN, GAS_CURRENCY } = process.env;
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
-module.exports = {
+export = {
   solidity: {
     version: '0.8.19',
     settings: {
@@ -68,4 +70,4 @@ module.exports = {
     outDir: './sdk/types',
     target: 'ethers-v5',
   },
-};
+} as HardhatUserConfig;
