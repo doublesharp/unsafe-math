@@ -95,6 +95,14 @@ library UnsafeU256 {
         return U256.wrap(U256.unwrap(_u256).exp(_exponent));
     }
 
+    function rshift(U256 _u256, U256 _shift) internal pure returns (U256) {
+        return U256.wrap(U256.unwrap(_u256) >> U256.unwrap(_shift));
+    }
+
+    function lshift(U256 _u256, U256 _shift) internal pure returns (U256) {
+        return U256.wrap(U256.unwrap(_u256) << U256.unwrap(_shift));
+    }
+
     function rshift(U256 _u256, uint256 _shift) internal pure returns (U256) {
         return U256.wrap(U256.unwrap(_u256) >> _shift);
     }
