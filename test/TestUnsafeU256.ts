@@ -45,6 +45,26 @@ describe('UnsafeU256', () => {
       assertSavesGas(safeGas, unsafeGas);
     });
 
+    it('Inc', async () => {
+      const { testUint256, testUnsafeU256 } = await loadFixture(fixtures);
+
+      [safeGas, safeResult] = await testUint256.inc(2);
+      [unsafeGas, unsafeResult] = await testUnsafeU256.inc(2);
+
+      expect(safeResult).to.equal(unsafeResult);
+      assertSavesGas(safeGas, unsafeGas);
+    });
+
+    it('Dec', async () => {
+      const { testUint256, testUnsafeU256 } = await loadFixture(fixtures);
+
+      [safeGas, safeResult] = await testUint256.dec(2);
+      [unsafeGas, unsafeResult] = await testUnsafeU256.dec(2);
+
+      expect(safeResult).to.equal(unsafeResult);
+      assertSavesGas(safeGas, unsafeGas);
+    });
+
     it('Mul', async () => {
       const { testUint256, testUnsafeU256 } = await loadFixture(fixtures);
 
@@ -70,26 +90,6 @@ describe('UnsafeU256', () => {
 
       [safeGas, safeResult] = await testUint256.mod(333, 2);
       [unsafeGas, unsafeResult] = await testUnsafeU256.mod(333, 2);
-
-      expect(safeResult).to.equal(unsafeResult);
-      assertSavesGas(safeGas, unsafeGas);
-    });
-
-    it('Inc', async () => {
-      const { testUint256, testUnsafeU256 } = await loadFixture(fixtures);
-
-      [safeGas, safeResult] = await testUint256.inc(2);
-      [unsafeGas, unsafeResult] = await testUnsafeU256.inc(2);
-
-      expect(safeResult).to.equal(unsafeResult);
-      assertSavesGas(safeGas, unsafeGas);
-    });
-
-    it('Dec', async () => {
-      const { testUint256, testUnsafeU256 } = await loadFixture(fixtures);
-
-      [safeGas, safeResult] = await testUint256.dec(2);
-      [unsafeGas, unsafeResult] = await testUnsafeU256.dec(2);
 
       expect(safeResult).to.equal(unsafeResult);
       assertSavesGas(safeGas, unsafeGas);

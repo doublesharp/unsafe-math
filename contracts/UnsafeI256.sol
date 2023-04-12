@@ -71,6 +71,14 @@ library UnsafeI256 {
         return I256.wrap(I256.unwrap(_i256).sub(_subtrahend));
     }
 
+    function inc(I256 _i256) internal pure returns (I256) {
+        return I256.wrap(I256.unwrap(_i256).inc());
+    }
+
+    function dec(I256 _i256) internal pure returns (I256) {
+        return I256.wrap(I256.unwrap(_i256).dec());
+    }
+
     function mul(I256 _i256, int256 _multiplier) internal pure returns (I256) {
         return I256.wrap(I256.unwrap(_i256).mul(_multiplier));
     }

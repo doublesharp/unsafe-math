@@ -21,6 +21,18 @@ contract TestUnsafeI256 {
         gasUsed -= gasleft();
     }
 
+    function inc(I256 a) external view returns (uint256 gasUsed, I256 result) {
+        gasUsed = gasleft();
+        result = a.inc();
+        gasUsed -= gasleft();
+    }
+
+    function dec(I256 a) external view returns (uint256 gasUsed, I256 result) {
+        gasUsed = gasleft();
+        result = a.dec();
+        gasUsed -= gasleft();
+    }
+
     function mul(I256 a, int256 b) external view returns (uint256 gasUsed, I256 result) {
         gasUsed = gasleft();
         result = a.mul(b);
