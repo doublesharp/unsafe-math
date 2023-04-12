@@ -57,7 +57,7 @@
         🏎️ unsafe 147
         ⛽ saves 49 / 25%
 
-  UnsafeI256
+  UnsafeMathI256
     Math
       ✔ Add
         -------------

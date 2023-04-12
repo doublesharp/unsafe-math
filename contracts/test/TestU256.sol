@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import {U256} from '../types/U256.sol';
+import {U256} from '../UnsafeMath.sol';
 
 contract TestU256 {
     function add(U256 a, U256 b) external view returns (uint256 gasUsed, U256 result) {

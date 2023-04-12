@@ -9,8 +9,8 @@ import {
   TestUnsafeMathInt256,
   TestU256,
   TestI256,
-  TestUnsafeU256,
-  TestUnsafeI256,
+  TestUnsafeMathU256,
+  TestUnsafeMathI256,
 } from '../../sdk/types';
 
 export async function fixtures() {
@@ -34,11 +34,11 @@ export async function fixtures() {
   const TestI256 = await ethers.getContractFactory('TestI256');
   const testI256 = (await TestI256.deploy()) as TestI256;
 
-  const TestUnsafeU256 = await ethers.getContractFactory('TestUnsafeU256');
-  const testUnsafeU256 = (await TestUnsafeU256.deploy()) as TestUnsafeU256;
+  const TestUnsafeMathU256 = await ethers.getContractFactory('TestUnsafeMathU256');
+  const testUnsafeMathU256 = (await TestUnsafeMathU256.deploy()) as TestUnsafeMathU256;
 
-  const TestUnsafeI256 = await ethers.getContractFactory('TestUnsafeI256');
-  const testUnsafeI256 = (await TestUnsafeI256.deploy()) as TestUnsafeI256;
+  const TestUnsafeMathI256 = await ethers.getContractFactory('TestUnsafeMathI256');
+  const testUnsafeMathI256 = (await TestUnsafeMathI256.deploy()) as TestUnsafeMathI256;
 
   return {
     sender,
@@ -48,8 +48,8 @@ export async function fixtures() {
     testUnsafeMathInt256,
     testU256,
     testI256,
-    testUnsafeU256,
-    testUnsafeI256,
+    testUnsafeMathU256,
+    testUnsafeMathI256,
   };
 }
 
