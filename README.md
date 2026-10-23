@@ -1,340 +1,246 @@
-# Unsafe Math for Solidity 0.8+
+<p align="center">
+  <img src="docs/assets/hero.svg" alt="Unsafe Math logo" width="88" height="88">
+</p>
 
-This library and custom user types allow for the use of unchecked math operations when appropriate.
-Gas savings can be realized when it is already known that the results will not overflow.
+<h1 align="center">Unsafe Math</h1>
 
-## Install
+<p align="center">Wrapping arithmetic. Familiar operators. Explicit EVM semantics.</p>
 
-```shell
-npm install -D @0xdoublesharp/unsafe-math
+<p align="center">
+  <a href="#choose-your-api">Choose an API</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#gas-results">Gas results</a> ·
+  <a href="#development">Development</a>
+</p>
+
+Unchecked `uint256` and `int256` arithmetic for Solidity, plus `U256` and `I256` types with overloaded operators and conversions at every integer width. Internal functions compile into your contract, so no library deployment or linking is required.
+
+## Choose your API
+
+| You need | Import from `@0xdoublesharp/unsafe-math/` | Minimum Solidity |
+| :--- | :--- | :--- |
+| Arithmetic on ordinary integers | `contracts/PrimitiveUnsafeMath.sol` | **0.8.0** |
+| Arithmetic, wrapper helpers, casts, and shifts | `contracts/UnsafeMath.sol` | **0.8.19** |
+| Operators on unsigned wrappers | `contracts/types/U256.sol` | **0.8.19** |
+| Operators on signed wrappers | `contracts/types/I256.sol` | **0.8.19** |
+
+`PrimitiveUnsafeMath` is standalone and imports no wrapper types. Existing `UnsafeMath` imports keep their full API. Tests run on Solidity **0.8.35**, with separate checks on the actual **0.8.0** and **0.8.19** minimums. Gas comparisons stay pinned to **0.8.19**.
+
+## Quick start
+
+```sh
+pnpm add @0xdoublesharp/unsafe-math
 ```
 
-```shell
-yarn add -D @0xdoublesharp/unsafe-math
-```
-
-## Library `UnsafeMath`
-
-The `UnsafeMath` library provides unchecked math operations for `uint256` and `int256` types with Solidity 0.8.0+. It also provides interoperability and conversion for the `U256` and `I256` user defined types.
-
-### Type `uint256`
-
-Use the `UnsafeMath` library for `uint256` types to perform unchecked math operations on two unsigned integers.
-
-#### API
-
-`using UnsafeMath for uint256;`
-
-- **Math**
-  - `_uint256.add(uint256 _addend)`: add a uint256 to a uint256
-  - `_uint256.sub(uint256 _subtrahend)`: subtract a uint256 from a uint256
-  - `_uint256.inc()`: increment a uint256
-  - `_uint256.dec()`: decrement a uint256
-  - `_uint256.mul(uint256 _multiplier)`: multiply a uint256 by a uint256
-  - `_uint256.div(uint256 _divisor)`: divide a uint256 from a uint256
-  - `_uint256.mod(uint256 _divisor)`: get the modulus of uint256s
-  - `_uint256.exp(uint256 _exponent)`: raise a uint256 by an exponent
-
-##### Example
+For arithmetic on ordinary integers, start here:
 
 ```solidity
-import { UnsafeMath } from '@0xdoublesharp/unsafe-math/contracts/UnsafeMath.sol';
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-contract ContractA {
-  using UnsafeMath for uint256;
+import {PrimitiveUnsafeMath} from '@0xdoublesharp/unsafe-math/contracts/PrimitiveUnsafeMath.sol';
 
-  function add(uint256 a, uint256 b) external pure returns (uint256) {
-    return a.add(b);
-  }
+contract Counter {
+    using PrimitiveUnsafeMath for uint256;
 
-  function while(uint256 times) external pure {
-    uint256 _iter = times;
-    while (_iter != 0) {
-      _iter = _iter.dec();
-      int64 _int64 = int64(_iter);
-      // ...
+    function next(uint256 value) external pure returns (uint256) {
+        return value.inc();
     }
-  }
+}
+```
 
-  function for(uint256 times) external pure {
-    for (uint256 _iter; _iter < times; _iter = _iter.inc()) {
-      int64 _int64 = int64(_iter);
-      // ...
+`next(type(uint256).max)` returns `0`. `PrimitiveUnsafeMath` provides the same unsigned and signed arithmetic methods listed below for `UnsafeMath`. Use these operations when wrapping is intended or your caller has already established bounds.
+
+> [!IMPORTANT]
+> Division and modulo by zero return **0**. Solidity's ordinary `unchecked` division and modulo still revert on zero. Choose the behavior your contract requires.
+
+## Arithmetic and conversion semantics
+
+- Addition, subtraction, multiplication, increment, decrement, and unsigned exponentiation wrap modulo 2^256. Signed results use two's complement.
+- Division and modulo return **zero when the divisor is zero**, including `0 / 0` and `0 % 0`. This follows the EVM's `DIV`, `SDIV`, `MOD`, and `SMOD` instructions. Solidity's ordinary `unchecked` division and modulo still revert on a zero divisor.
+- Signed division truncates toward zero. Signed modulo takes the sign of the dividend. `int256.min / -1` returns `int256.min`, and `int256.min % -1` returns zero.
+- Unsigned exponentiation returns one for `0 ** 0` and wraps on overflow.
+- Casts discard higher bits without range checks. Signed casts interpret the remaining sign bit, so `U256.wrap(255).asInt8()` returns `-1`. Wrapping between signed and unsigned values preserves all 256 bits.
+- Left shifts discard higher bits. Both shift directions return zero for counts of 256 or greater.
+
+Use these operations only where their semantics match the caller's requirements. Arithmetic can save gas when overflow checks are unnecessary. Wrapper calls, comparisons, and bitwise operations can cost more gas with the optimizer disabled. See [gas guidance](GAS_REPORT.md).
+
+## Unsigned arithmetic with the full library
+
+Add `using UnsafeMath for uint256;` to use `add(uint256)`, `sub(uint256)`, `mul(uint256)`, `div(uint256)`, `mod(uint256)`, `exp(uint256)`, `inc()`, and `dec()`.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+import {UnsafeMath} from '@0xdoublesharp/unsafe-math/contracts/UnsafeMath.sol';
+
+contract UnsignedMethods {
+    using UnsafeMath for uint256;
+
+    function add(uint256 a, uint256 b) external pure returns (uint256) {
+        return a.add(b);
     }
-  }
-}
-```
 
-### Type `int256`
-
-Use the `UnsafeMath` library for `int256` types to perform unchecked math operations on two signed integers. Note that `exp()` is not available for signed integers.
-
-#### API
-
-`using UnsafeMath for int256;`
-
-- **Math**
-  - `_int256.add(int256 _addend)`: add an int256 to an int256
-  - `_int256.sub(int256 _subtrahend)`: subtract an int256 from an int256
-  - `_int256.inc()`: increment an int256 value
-  - `_int256.dec()`: decrement an int256
-  - `_int256.mul(int256 _multiplier)`: multiply an int256 by an int256
-  - `_int256.div(int256 _divisor)`: divide an int256 from an int256
-  - `_int256.mod(int256 _divisor)`: get the modulus of int256s
-
-##### Example
-
-```solidity
-import { UnsafeMath } from '@0xdoublesharp/unsafe-math/contracts/UnsafeMath.sol';
-
-contract ContractB {
-  using UnsafeMath for int256;
-
-  function sub(int256 a, int256 b) external pure returns (int256) {
-    return a.sub(b);
-  }
-}
-```
-
-### User Defined Type `U256`
-
-Used with `U256` to access helper methods for interacting with `uint256` types and functionality not available in overloaded operators, such as bit shifting and exponential operations.
-
-#### API
-
-`using UnsafeMath for U256;`
-
-- **Math**
-  - `_U256.add(uint256 _addend)`: add a U256 to a uint256
-  - `_U256.sub(uint256 _subtrahend)`: subtract a U256 from a uint256
-  - `_U256.inc()`: increment a U256
-  - `_U256.dec()`: decrement a U256
-  - `_U256.mul(uint256 _multiplier)`: multiply a U256 by a uint256
-  - `_U256.div(uint256 _divisor)`: divide a uint256 from a U256
-  - `_U256.mod(uint256 _divisor)`: get the modulus of U256 and uint256
-  - `_U256.exp(uint256 _exponent)`: raise a U256 by an exponent
-- **Comparison**
-  - `_U256.eq(uint256 _compare)`: compare U256 and uint256 equality
-  - `_U256.neq(uint256 _compare)`: compare U256 and uint256 non-equality
-  - `_U256.lt(uint256 _compare)`: compare U256 and uint256 less than uint256
-  - `_U256.lte(uint256 _compare)`: compare U256 less than or equal to uint256
-  - `_U256.gt(uint256 _compare`: compare U256 greater than uint256
-  - `_U256.gte(uint256 _compare)`: compare U256 greater than or equal to uint256
-- **Logical**
-  - `_U256.and(uint256 _operator)`: bitwise AND on U256 and uint256
-  - `_U256.or(uint256 _operator)`: bitwise OR on U256 and uint256
-  - `_U256.xor(uint256 _operator)`: bitwise XOR on U256 and uint256
-  - `_U256.not()`: bitwise NOT on U256
-  - `_U256.rshift(U256 _shift)`: right shift U256 by U256
-  - `_U256.lshift(U256 _shift)`: right shift U256 by U256
-  - `_U256.rshift(uint256 _shift)`: right shift U256 by uint256
-  - `_U256.lshift(uint256 _shift)`: right shift U256 by uint256
-- **As Unsigned Integer**
-  - `_U256.asUint8()`: U256 to uint8
-  - `_U256.asUint16()`: U256 to uint16
-  - `_U256.asUint32()`: U256 to uint32
-  - `_U256.asUint64()`: U256 to uint64
-  - `_U256.asUint128()`: U256 to uint128
-  - `_U256.asUint256()`: U256 to uint256
-- **As Signed Integer**
-  - `_U256.asInt8()`: U256 to int8
-  - `_U256.asInt16()`: U256 to int16
-  - `_U256.asInt32()`: U256 to int32
-  - `_U256.asInt64()`: U256 to int64
-  - `_U256.asInt128()`: U256 to int128
-  - `_U256.asInt256()`: U256 to int256
-- **As U256**
-  - `_uint256.asU256()`: convert a uint256 to U256
-  - `_int256.asU256()`: convert an int256 to U256
-
-##### Example
-
-```solidity
-import { UnsafeMath, U256 } from '@0xdoublesharp/unsafe-math/contracts/UnsafeMath.sol';
-
-contract ContractA {
-  using UnsafeMath for U256;
-  using UnsafeMath for uint256;
-  using UnsafeMath for int256;
-
-  function add(int256 a, uint256 b) external pure returns (uint256) {
-    return a.asU256().add(b).asUint256();
-  }
-
-  function sub(uint256 a, uint256 b) external pure returns (uint256) {
-    return (a.asU256() - b.asU256()).asUint256();
-  }
-}
-```
-
-### User Defined Type `I256`
-
-Use with `I256` to access helper methods for interacting with `int256` types and functionality not available in overloaded operators.
-
-#### API
-
-`using UnsafeMath for I256;`
-
-- **Math**
-  - `_I256.add(uint256 _addend)`: add an I256 to a int256
-  - `_I256.sub(uint256 _subtrahend)`: subtract an I256 from a int256
-  - `_I256.inc()`: increment an I256
-  - `_I256.dec()`: decrement an I256
-  - `_I256.mul(uint256 _multiplier)`: multiply an I256 by a int256
-  - `_I256.div(uint256 _divisor)`: divide a int256 from an I256
-  - `_I256.mod(uint256 _divisor)`: get the modulus of U256 and uint256
-- **Comparison**
-  - `_I256.eq(uint256 _compare)`: compare U256 and uint256 equality
-  - `_I256.neq(uint256 _compare)`: compare U256 and uint256 non-equality
-  - `_I256.lt(uint256 _compare)`: compare U256 and uint256 less than uint256
-  - `_I256.lte(uint256 _compare)`: compare U256 less than or equal to uint256
-  - `_I256.gt(uint256 _compare`: compare U256 greater than uint256
-  - `_I256.gte(uint256 _compare)`: compare U256 greater than or equal to uint256
-- **Logical**
-  - `_I256.and(uint256 _operator)`: bitwise AND on U256 and uint256
-  - `_I256.or(uint256 _operator)`: bitwise OR on U256 and uint256
-  - `_I256.xor(uint256 _operator)`: bitwise XOR on U256 and uint256
-  - `_I256.not()`: bitwise NOT on U256
-- **As Unsigned Integer**
-  - `_I256.asUint8()`: U256 to uint8
-  - `_I256.asUint16()`: U256 to uint16
-  - `_I256.asUint32()`: U256 to uint32
-  - `_I256.asUint64()`: U256 to uint64
-  - `_I256.asUint128()`: U256 to uint128
-  - `_I256.asUint256()`: U256 to uint256
-- **As Signed Integer**
-  - `_I256.asInt8()`: U256 to int8
-  - `_I256.asInt16()`: U256 to int16
-  - `_I256.asInt32()`: U256 to int32
-  - `_I256.asInt64()`: U256 to int64
-  - `_I256.asInt128()`: U256 to int128
-  - `_I256.asInt256()`: U256 to int256
-- **As I256**
-  - `_uint256.asI256()`: convert a int256 to I256
-  - `_int256.asI256()`: convert an int256 to I256
-
-##### Example
-
-```solidity
-import { UnsafeMath, I256 } from '@0xdoublesharp/unsafe-math/contracts/UnsafeMath.sol';
-
-contract ContractB {
-  using UnsafeMath for I256;
-  using UnsafeMath for uint256;
-  using UnsafeMath for int256;
-
-  function add(int256 a, uint256 b) external pure returns (int256) {
-    I256 _a = a.asI256();
-    return _a.add(int256(b)).asInt256();
-  }
-
-  function sub(uint256 a, uint256 b) external pure returns (int256) {
-    I256 _a = a.asI256();
-    I256 _b = b.asI256();
-    return (a - b).asInt256();
-  }
-}
-```
-
-## User Defined Types: `U256` and `I256`
-
-User defined types with operator overloads are also provided to take advantage of the latest Solidity features. Use `U256` for unchecked unsigned integer operations, or `I256` for unchecked signed integer operations. Helper methods are also provided for interoperating with `uint256` and `int256` via the `UnsafeMath` library.
-
-The overloads also provide comparison and bitwise operators where available.
-
-### User Defined Type `U256`
-
-The `U256` user defined type can perform unchecked math operations using overloaded operators.
-
-#### API
-
-- **Math**
-  - `_u256 + _u256`: add a U256 to a U256
-  - `_u256 - _u256`: subtract a U256 from a U256
-  - `_u256 * _u256`: multiply a U256 by a U256
-  - `_u256 / _u256`: divide a U256 from a U256
-  - `_u256 % _u256`: get the modulus of U256s
-- **Comparison**
-  - `_u256 == _u256`: compare U256 equality
-  - `_u256 != _u256`: compare U256 non-equality
-  - `_u256 < _u256`: compare U256 less than U256
-  - `_u256 <= _u256`: compare U256 less than or equal to U256
-  - `_u256 > _u256`: compare U256 greater than U256
-  - `_u256 >= _u256`: compare U256 greater than or equal to U256
-- **Logical**
-  - `_u256 & _u256`: bitwise AND on U256
-  - `_u256 | _u256`: bitwise OR on U256
-  - `_u256 ^ _u256`: bitwise XOR on U256
-  - `~_u256`: bitwise NOT on U256
-
-##### Example
-
-```solidity
-import { U256 } from '@0xdoublesharp/unsafe-math/contracts/types/U256.sol';
-
-contract ContractA {
-  function add(uint256 a, uint256 b) external pure returns (uint256) {
-      return (U256.wrap(a) - U256.wrap(b)).asUint256();
-  }
-
-  function while(uint256 times) external pure {
-    U256 _iter = U256.wrap(times);
-    while (_iter.neq(0)) {
-      _iter = _iter.dec();
-      uint256 _uint256 = _iter.asUint256();
-      int64 _int64 = _iter.asInt64();
-      // ...
+    function countDown(uint256 times) external pure returns (uint256 iterations) {
+        while (times != 0) {
+            times = times.dec();
+            iterations = iterations.inc();
+        }
     }
-  }
-
-  function for(uint256 times) external pure {
-    U256 _times = U256.wrap(times);
-    for (U256 _iter; _iter < _times; _iter = _iter.inc()) {
-      uint256 _uint256 = _iter.asUint256();
-      int64 _int64 = _iter.asInt64();
-      // ...
-    }
-  }
 }
 ```
 
-### User Definited Type `I256`
+## Signed arithmetic with the full library
 
-The `I256` user defined type can perform unchecked math operations using overloaded operators.
-
-#### API
-
-- **Math**
-  - `_i256 + _i256`: add a I256 to a I256
-  - `_i256 - _i256`: subtract a I256 from a I256
-  - `_i256 * _i256`: multiply a I256 by a I256
-  - `_i256 / _i256`: divide a I256 from a I256
-  - `_i256 % _i256`: get the modulus of I256s
-- **Comparison**
-  - `_i256 == _i256`: compare I256 equality
-  - `_i256 != _i256`: compare I256 non-equality
-  - `_i256 < _i256`: compare I256 less than I256
-  - `_i256 <= _i256`: compare I256 less than or equal to I256
-  - `_i256 > _i256`: compare I256 greater than I256
-  - `_i256 >= _i256`: compare I256 greater than or equal to I256
-- **Logical**
-  - `_i256 & _i256`: bitwise AND on I256
-  - `_i256 | _i256`: bitwise OR on I256
-  - `_i256 ^ _i256`: bitwise XOR on I256
-  - `~_i256`: bitwise NOT on I256
-
-##### Example
+Add `using UnsafeMath for int256;` to use `add(int256)`, `sub(int256)`, `mul(int256)`, `div(int256)`, `mod(int256)`, `inc()`, and `dec()`. Signed exponentiation is not provided.
 
 ```solidity
-import { I256 } from '@0xdoublesharp/unsafe-math/contracts/types/I256.sol';
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
 
-contract ContractB {
-  function add(int256 a, int256 b) external pure returns (int256) {
-    return (I256.wrap(a) - I256.wrap(b)).asInt256();
-  }
+import {UnsafeMath} from '@0xdoublesharp/unsafe-math/contracts/UnsafeMath.sol';
+
+contract SignedMethods {
+    using UnsafeMath for int256;
+
+    function sub(int256 a, int256 b) external pure returns (int256) {
+        return a.sub(b);
+    }
 }
 ```
 
-## Gas Usage Optimization Disabled
+## U256 helper methods
 
-See [GAS_REPORT](GAS_REPORT.md).
+Add `using UnsafeMath for U256;`.
+
+- Arithmetic: `add(uint256)`, `sub(uint256)`, `mul(uint256)`, `div(uint256)`, `mod(uint256)`, `exp(uint256)`, `inc()`, `dec()`.
+- Comparison: `eq(uint256)`, `neq(uint256)`, `lt(uint256)`, `lte(uint256)`, `gt(uint256)`, `gte(uint256)`.
+- Bitwise: `and(uint256)`, `or(uint256)`, `xor(uint256)`, `not()`.
+- Shifts: `lshift(uint256)` and `lshift(U256)` shift left; `rshift(uint256)` and `rshift(U256)` shift right.
+- Conversions: `asUintN()` and `asIntN()` for every multiple of eight from 8 through 256, including `asUint232()`, `asUint240()`, and `asUint248()`.
+- Wrapping: `uint256.asU256()` and `int256.asU256()`, after enabling `UnsafeMath` for the primitive type. Solidity also provides `U256.wrap(uint256)` and `U256.unwrap(U256)`.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+import {UnsafeMath, U256} from '@0xdoublesharp/unsafe-math/contracts/UnsafeMath.sol';
+
+contract UnsignedHelpers {
+    using UnsafeMath for U256;
+    using UnsafeMath for uint256;
+    using UnsafeMath for int256;
+
+    function add(int256 a, uint256 b) external pure returns (uint256) {
+        return a.asU256().add(b).asUint256();
+    }
+
+    function sub(uint256 a, uint256 b) external pure returns (uint256) {
+        return (a.asU256() - b.asU256()).asUint256();
+    }
+}
+```
+
+## I256 helper methods
+
+Add `using UnsafeMath for I256;`. Binary helper arguments are signed `int256` values.
+
+- Arithmetic: `add(int256)`, `sub(int256)`, `mul(int256)`, `div(int256)`, `mod(int256)`, `inc()`, `dec()`.
+- Comparison: `eq(int256)`, `neq(int256)`, `lt(int256)`, `lte(int256)`, `gt(int256)`, `gte(int256)`.
+- Bitwise: `and(int256)`, `or(int256)`, `xor(int256)`, `not()`.
+- Conversions: `asUintN()` and `asIntN()` for every multiple of eight from 8 through 256.
+- Wrapping: `uint256.asI256()` and `int256.asI256()`, after enabling `UnsafeMath` for the primitive type. Solidity also provides `I256.wrap(int256)` and `I256.unwrap(I256)`.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+import {UnsafeMath, I256} from '@0xdoublesharp/unsafe-math/contracts/UnsafeMath.sol';
+
+contract SignedHelpers {
+    using UnsafeMath for I256;
+    using UnsafeMath for uint256;
+
+    function sub(uint256 a, uint256 b) external pure returns (int256) {
+        I256 left = a.asI256();
+        I256 right = b.asI256();
+        return (left - right).asInt256();
+    }
+}
+```
+
+## U256 operators
+
+Importing the type enables `+`, `-`, `*`, `/`, `%`, `==`, `!=`, `<`, `<=`, `>`, `>=`, `&`, `|`, `^`, and `~` for two `U256` operands, or one operand for `~`. Shift and exponentiation operators cannot be overloaded; use the helper methods.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+import {U256} from '@0xdoublesharp/unsafe-math/contracts/types/U256.sol';
+
+contract UnsignedOperators {
+    function add(uint256 a, uint256 b) external pure returns (uint256) {
+        return U256.unwrap(U256.wrap(a) + U256.wrap(b));
+    }
+}
+```
+
+## I256 operators
+
+The same binary arithmetic, comparison, and bitwise operators are provided for `I256`. Unary negation, signed shifts, and signed exponentiation are not provided.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+import {I256} from '@0xdoublesharp/unsafe-math/contracts/types/I256.sol';
+
+contract SignedOperators {
+    function add(int256 a, int256 b) external pure returns (int256) {
+        return I256.unwrap(I256.wrap(a) + I256.wrap(b));
+    }
+}
+```
+
+## Gas results
+
+![Measured unsigned addition gas: checked Solidity 203, UnsafeMath uint256 method 84, PrimitiveUnsafeMath uint256 method 84, U256 helper or operator 132. Solidity 0.8.19, optimizer disabled.](docs/assets/gas-savings.svg)
+
+These are gas units measured **inside the test method**, excluding transaction and external dispatch costs. With operands `5` and `2`, both `UnsafeMath` and `PrimitiveUnsafeMath` use **84 gas** for their ordinary `uint256` addition methods, versus 203 for checked Solidity. The **132 gas** result belongs to the `U256` wrapper helpers and operators. The standalone library provides older-compiler compatibility with the same arithmetic implementations and gas costs. Comparisons and bitwise wrappers cost more than ordinary Solidity under these settings.
+
+See the [gas report](GAS_REPORT.md) for all arithmetic results, wrapper overhead, compiler settings, and reproduction steps. Measure your own compiler and optimizer configuration before making gas claims.
+
+## Development
+
+Use **Node.js 22**, **pnpm 11.21.0**, and **Foundry v1.8.5**. Tests are native Solidity, with no Hardhat, TypeScript, or forge-std dependency. The launcher downloads pinned native compilers from Solidity's official distribution and verifies their checksums and versions.
+
+On macOS, put the checkout, dependencies, and temporary files on Scratch:
+
+```sh
+mkdir -p /Volumes/Scratch/unsafe-math/worktrees /Volumes/Scratch/unsafe-math/tmp/dev
+export TMPDIR=/Volumes/Scratch/unsafe-math/tmp/dev
+git clone https://github.com/doublesharp/unsafe-math.git /Volumes/Scratch/unsafe-math/worktrees/dev
+cd /Volumes/Scratch/unsafe-math/worktrees/dev
+nvm use
+pnpm install --frozen-lockfile --store-dir /Volumes/Scratch/unsafe-math/tmp/dev/pnpm-store
+pnpm validate
+```
+
+| Command | Checks |
+| :--- | :--- |
+| `pnpm test` | Correctness and boundary tests on Solidity 0.8.35; 256 runs per fuzz test |
+| `pnpm test:compat` | Primitive tests on 0.8.0, full correctness suite on 0.8.19 |
+| `pnpm coverage` | Every production file; exact counters must reach 100% |
+| `pnpm test:gas` | Uninstrumented comparisons on 0.8.19, Paris EVM, optimizer disabled |
+| `pnpm check:docs` | Each of the seven examples above compiles on its minimum compiler |
+| `pnpm check:package` | Exact archive contents, extracted full-API compilation, extracted primitive tests |
+| `pnpm test:tools` | Coverage and gas-report gates reject incomplete results |
+| `pnpm validate` | All of the above, with gas measurements after coverage |
+
+Builds, compilers, caches, and reports default to `/Volumes/Scratch/unsafe-math/build/<checkout>-<path-hash>`. The launcher stops if Scratch is missing. On an ephemeral CI runner, set `UNSAFE_MATH_BUILD_DIR` and `TMPDIR` to absolute disposable directories. CI runs the same locked install and validation command.
+
+Coverage includes all four production files and every conversion width, wrapper, and shift overload. Branch coverage is reported as N/A because the production files have no instrumented branches. Correctness tests explicitly cover the exceptional arithmetic cases described above.
+
+[Changelog](CHANGELOG.md) · [MIT license](LICENSE)

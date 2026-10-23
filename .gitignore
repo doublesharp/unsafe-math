@@ -1,16 +1,12 @@
-node_modules
+node_modules/
 .env
-coverage
+.vscode/
+out/
+cache/
+broadcast/
+snapshots/
+coverage/
 coverage.json
-typechain
-.vscode
-.openzeppelin
-
-# fix for coverage with 0.8.19
-/modules
-
-#Hardhat files
-/cache
-/artifacts
-/.openzeppelin
-/sdk
+lcov.info
+.solidity-auditor/
+*.tgz

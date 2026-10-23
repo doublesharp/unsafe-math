@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
 // solhint-disable func-name-mixedcase
 
@@ -72,7 +72,7 @@ library UnsafeMath {
         return result;
     }
 
-    /// @dev Returns the division of two unsigned integers
+    /// @dev Returns the quotient, or zero when the divisor is zero.
     /// @param _uint256 The first unsigned integer
     /// @param _divisor The second unsigned integer
     /// @return The division of the two unsigned integers
@@ -85,7 +85,7 @@ library UnsafeMath {
         return result;
     }
 
-    /// @dev Returns the remainder of the division of two unsigned integers
+    /// @dev Returns the remainder, or zero when the divisor is zero.
     /// @param _uint256 The first unsigned integer
     /// @param _divisor The second unsigned integer
     /// @return The remainder of the division of the two unsigned integers
@@ -150,7 +150,7 @@ library UnsafeMath {
         }
     }
 
-    /// @dev Returns the division of two signed integers
+    /// @dev Truncates toward zero; zero divisors return zero and MIN / -1 wraps to MIN.
     /// @param _int256 The first signed integer
     /// @param _divisor The second signed integer
     /// @return The division of the two signed integers
@@ -163,7 +163,7 @@ library UnsafeMath {
         return result;
     }
 
-    /// @dev Returns the remainder of the division of two signed integers
+    /// @dev Uses the dividend's sign; zero divisors and MIN % -1 return zero.
     /// @param _int256 The first signed integer
     /// @param _divisor The second signed integer
     /// @return The remainder of the division of the two signed integers
@@ -800,6 +800,21 @@ library UnsafeMath {
         return U256.unwrap(_u256);
     }
 
+    /// @dev Converts a U256 to a uint248, discarding higher bits.
+    function asUint248(U256 _u256) internal pure returns (uint248 unsigned) {
+        return uint248(U256.unwrap(_u256));
+    }
+
+    /// @dev Converts a U256 to a uint240, discarding higher bits.
+    function asUint240(U256 _u256) internal pure returns (uint240 unsigned) {
+        return uint240(U256.unwrap(_u256));
+    }
+
+    /// @dev Converts a U256 to a uint232, discarding higher bits.
+    function asUint232(U256 _u256) internal pure returns (uint232 unsigned) {
+        return uint232(U256.unwrap(_u256));
+    }
+
     /// @dev Converts a U256 to a uint224.
     /// @param _u256 The U256 to unwrap.
     /// @return unsigned The uint224 representation of the U256.
@@ -1079,7 +1094,7 @@ library UnsafeMath {
     function asInt168(U256 _u256) internal pure returns (int168 signed) {
         return int168(int256(U256.unwrap(_u256)));
     }
-    
+
     /// @dev Converts a U256 to an int160.
     /// @param _u256 The U256 to convert.
     /// @return signed The int160 representation of the U256.
