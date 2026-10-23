@@ -25,3 +25,4 @@ jobs:
           echo "TMPDIR=$RUNNER_TEMP" >> "$GITHUB_ENV"
       - run: pnpm install --frozen-lockfile
       - run: pnpm validate
+      - run: node --test scripts/release.test.cjs
