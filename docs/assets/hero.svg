@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
+  <title id="title">Unsafe Math</title>
+  <desc id="desc">Orange arithmetic symbol inside teal code brackets on a dark square.</desc>
+  <rect x="1" y="1" width="94" height="94" rx="24" fill="#101c32" stroke="#2b3c56" stroke-width="2"/>
+  <path d="M29 28 12 48l17 20M67 28l17 20-17 20" fill="none" stroke="#54ddc2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M48 32v32M36 40l24 16M36 56l24-16" fill="none" stroke="#ffb46c" stroke-width="5" stroke-linecap="round"/>
+</svg>

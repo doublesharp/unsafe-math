@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="412" viewBox="0 0 480 412" role="img" aria-labelledby="title desc">
+  <title id="title">Gas used by unsigned addition</title>
+  <desc id="desc">Checked Solidity uses 203 gas. Both UnsafeMath and PrimitiveUnsafeMath uint256 methods use 84 gas, saving 58.62 percent. U256 wrapper helpers and operators use 132 gas, saving 34.98 percent. Solidity 0.8.19 without optimization, operands 5 and 2, excluding transaction costs.</desc>
+  <rect width="480" height="412" rx="16" fill="#101c32"/>
+  <g font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+    <text x="20" y="34" font-size="21" font-weight="700" fill="#f3f7ff">Unsigned addition</text>
+    <text x="20" y="57" font-size="14" fill="#b8c8dd">Gas inside the method · lower is better</text>
+    <g font-size="16" fill="#f3f7ff">
+      <text x="20" y="91">Checked Solidity</text>
+      <text x="460" y="91" text-anchor="end" font-weight="700">203</text>
+      <text x="20" y="161">UnsafeMath · uint256</text>
+      <text x="460" y="161" text-anchor="end" font-weight="700" fill="#54ddc2">84 · −58.62%</text>
+      <text x="20" y="231">PrimitiveUnsafeMath · uint256</text>
+      <text x="460" y="231" text-anchor="end" font-weight="700" fill="#54ddc2">84 · −58.62%</text>
+      <text x="20" y="301">U256 wrapper helper / operator</text>
+      <text x="460" y="301" text-anchor="end" font-weight="700" fill="#ffb46c">132 · −34.98%</text>
+    </g>
+    <g fill="#1d304b"><rect x="20" y="104" width="440" height="26" rx="5"/><rect x="20" y="174" width="440" height="26" rx="5"/><rect x="20" y="244" width="440" height="26" rx="5"/><rect x="20" y="314" width="440" height="26" rx="5"/></g>
+    <rect x="20" y="104" width="440" height="26" rx="5" fill="#98a9c0"/>
+    <rect x="20" y="174" width="182.07" height="26" rx="5" fill="#54ddc2"/>
+    <rect x="20" y="244" width="182.07" height="26" rx="5" fill="#54ddc2"/>
+    <rect x="20" y="314" width="286.11" height="26" rx="5" fill="#ffb46c"/>
+    <g font-size="12" fill="#b8c8dd">
+      <text x="20" y="370">Solidity 0.8.19 · Paris · optimizer off · a = 5, b = 2</text>
+      <text x="20" y="390">Excludes transaction and external dispatch costs</text>
+    </g>
+  </g>
+</svg>

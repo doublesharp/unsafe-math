@@ -1,0 +1,27 @@
+[profile.default]
+src = "contracts"
+test = "test"
+libs = []
+out = "${UNSAFE_MATH_BUILD_DIR}/out"
+cache_path = "${UNSAFE_MATH_BUILD_DIR}/cache"
+solc_version = "0.8.35"
+auto_detect_solc = false
+evm_version = "paris"
+optimizer = false
+optimizer_runs = 0
+dynamic_test_linking = false
+gas_snapshot_emit = false
+test_failures_file = "${UNSAFE_MATH_BUILD_DIR}/test-failures"
+snapshots = "${UNSAFE_MATH_BUILD_DIR}/snapshots"
+fs_permissions = [{ access = "read", path = "${UNSAFE_MATH_BUILD_DIR}/out" }]
+
+[profile.default.fuzz]
+runs = 256
+seed = "0x7b19a2d3e4f5"
+failure_persist_dir = "${UNSAFE_MATH_BUILD_DIR}/fuzz-failures"
+
+[fmt]
+line_length = 120
+tab_width = 4
+bracket_spacing = false
+quote_style = "single"
