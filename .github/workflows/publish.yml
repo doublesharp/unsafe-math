@@ -1,0 +1,73 @@
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing stable release tag, such as v0.0.17
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      github.repository == 'doublesharp/unsafe-math' &&
+      ((github.event_name == 'release' && !github.event.release.draft && !github.event.release.prerelease) ||
+       (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check release identity and source
+        run: node scripts/release.cjs check
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.8.5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.21.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Configure disposable outputs
+        run: |
+          {
+            echo "UNSAFE_MATH_BUILD_DIR=$RUNNER_TEMP/unsafe-math-build"
+            echo "TMPDIR=$RUNNER_TEMP"
+            echo "npm_config_cache=$RUNNER_TEMP/npm-cache"
+          } >> "$GITHUB_ENV"
+      - name: Install OIDC-capable npm CLI
+        run: npm install --global npm@11.19.1 --ignore-scripts
+      - run: pnpm install --frozen-lockfile
+      - name: Validate release
+        run: |
+          node --test scripts/release.test.cjs
+          pnpm validate
+      - name: Pack validated source
+        id: package
+        run: node scripts/release.cjs pack
+      - name: Publish through npm trusted publishing
+        env:
+          RELEASE_ARCHIVE: ${{ steps.package.outputs.archive }}
+        run: npm publish "$RELEASE_ARCHIVE" --access public --provenance --ignore-scripts
+      - name: Verify published package
+        env:
+          RELEASE_ARCHIVE: ${{ steps.package.outputs.archive }}
+        run: node scripts/release.cjs verify "$RELEASE_ARCHIVE"
