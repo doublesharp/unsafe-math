@@ -9,6 +9,10 @@ on:
         description: Existing stable release tag, such as v0.0.17
         required: true
         type: string
+      verify_only:
+        description: Verify an accepted upload without publishing again
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -64,6 +68,7 @@ jobs:
         id: package
         run: node scripts/release.cjs pack
       - name: Publish through npm trusted publishing
+        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.verify_only }}
         env:
           RELEASE_ARCHIVE: ${{ steps.package.outputs.archive }}
         run: npm publish "$RELEASE_ARCHIVE" --access public --provenance --ignore-scripts

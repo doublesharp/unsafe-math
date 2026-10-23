@@ -37,4 +37,12 @@ The same operation is available under GitHub Actions, Publish to npm, Run workfl
 
 Manual recovery uses the current main workflow, checks that the selected tag is in main's history, and requires all packaged files to match that tag. New workflow and release-helper files do not change the package contents. Existing tags remain unchanged. npm will reject an already-published version.
 
-If npm rejects authentication, verify the trusted publisher fields, direct-publishing permission, and configuration expiry. If verification fails after upload, inspect the npm package before retrying because published versions cannot be overwritten.
+If npm rejects authentication, verify the trusted publisher fields, direct-publishing permission, and configuration expiry. npm can accept an upload and process it before exposing it in the registry. Verification waits up to ten minutes for that processing window and still requires an exact archive checksum.
+
+If an upload was accepted but verification timed out, use a verification-only run instead of uploading again:
+
+```sh
+gh workflow run publish.yml --repo doublesharp/unsafe-math --ref main -f tag=v0.0.17 -f verify_only=true
+```
+
+This runs validation, packing, and registry verification while skipping publication. Published versions cannot be overwritten.
