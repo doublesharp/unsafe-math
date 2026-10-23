@@ -62,12 +62,18 @@ test('registry processing may outlast the initial six attempts', async () => {
   const metadata = {
     name: manifest.name,
     version: manifest.version,
-    dist: { integrity: 'sha512-' + createHash('sha512').update(bytes).digest('base64') },
+    dist: {
+      integrity: 'sha512-' + createHash('sha512').update(bytes).digest('base64'),
+      tarball: 'https://registry.npmjs.org/archive.tgz',
+    },
   };
   let attempts = 0;
   let waits = 0;
   await verifyPublished(manifest, bytes, {
-    fetcher: async () => (++attempts <= 8 ? { ok: false, status: 404 } : { ok: true, json: async () => metadata }),
+    fetcher: async (url) => {
+      if (url.endsWith('.tgz')) return { ok: true, arrayBuffer: async () => bytes };
+      return ++attempts <= 8 ? { ok: false, status: 404 } : { ok: true, json: async () => metadata };
+    },
     sleep: async () => {
       waits++;
     },
@@ -100,4 +106,30 @@ test('registry retries are bounded and do not retry authentication failures', as
     /403/
   );
   assert.equal(attempts, 1);
+});
+
+test('visible metadata is insufficient until the verified archive can be downloaded', async () => {
+  const bytes = Buffer.from('accepted archive');
+  const metadata = {
+    name: manifest.name,
+    version: manifest.version,
+    dist: {
+      integrity: 'sha512-' + createHash('sha512').update(bytes).digest('base64'),
+      tarball: 'https://registry.npmjs.org/archive.tgz',
+    },
+  };
+  let downloads = 0;
+  let waits = 0;
+  await verifyPublished(manifest, bytes, {
+    fetcher: async (url) => {
+      if (!url.endsWith('.tgz')) return { ok: true, json: async () => metadata };
+      if (++downloads <= 2) return { ok: false, status: 404 };
+      return { ok: true, arrayBuffer: async () => bytes };
+    },
+    sleep: async () => {
+      waits++;
+    },
+  });
+  assert.equal(downloads, 3);
+  assert.equal(waits, 2);
 });

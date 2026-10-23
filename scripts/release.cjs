@@ -39,13 +39,22 @@ async function verifyPublished(
 ) {
   const url = `https://registry.npmjs.org/${encodeURIComponent(manifest.name)}/${encodeURIComponent(manifest.version)}`;
   for (let attempt = 0; attempt < attempts; ++attempt) {
-    const response = await fetcher(url, {
+    let response = await fetcher(url, {
       headers: { 'Cache-Control': 'no-cache' },
       signal: AbortSignal.timeout(15000),
     });
     if (response.ok) {
-      verifyMetadata(await response.json(), manifest, archive);
-      return;
+      const metadata = await response.json();
+      verifyMetadata(metadata, manifest, archive);
+      assert.equal(new URL(metadata.dist.tarball).origin, 'https://registry.npmjs.org', 'Unexpected tarball registry');
+      response = await fetcher(metadata.dist.tarball, {
+        headers: { 'Cache-Control': 'no-cache' },
+        signal: AbortSignal.timeout(15000),
+      });
+      if (response.ok) {
+        verifyMetadata(metadata, manifest, Buffer.from(await response.arrayBuffer()));
+        return;
+      }
     }
     if (response.status !== 404 || attempt === attempts - 1)
       throw new Error(

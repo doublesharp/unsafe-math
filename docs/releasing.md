@@ -21,7 +21,7 @@ Use the filename only, including `.yml`. The workflow lives at `.github/workflow
 1. Update `package.json` and the changelog. Merge the validated source to `main`.
 2. Create a stable `vX.Y.Z` tag matching the package version and publish its GitHub release.
 3. The workflow checks the tag, source history, and packaged files; runs the full validation suite; packs the source; and publishes with provenance.
-4. Its final step verifies the npm package's name, version, and archive integrity against the uploaded archive.
+4. Its final step verifies the npm package's name and version, downloads its public tarball, and checks the archive integrity against the uploaded archive.
 
 Draft releases, prereleases, forks, and manual runs from feature branches cannot publish through this workflow. Development CI does not publish.
 
@@ -37,7 +37,7 @@ The same operation is available under GitHub Actions, Publish to npm, Run workfl
 
 Manual recovery uses the current main workflow, checks that the selected tag is in main's history, and requires all packaged files to match that tag. New workflow and release-helper files do not change the package contents. Existing tags remain unchanged. npm will reject an already-published version.
 
-If npm rejects authentication, verify the trusted publisher fields, direct-publishing permission, and configuration expiry. npm can accept an upload and process it before exposing it in the registry. Verification waits up to ten minutes for that processing window and still requires an exact archive checksum.
+If npm rejects authentication, verify the trusted publisher fields, direct-publishing permission, and configuration expiry. npm can accept an upload and process it before exposing it in the registry. Verification retries for registry processing and still requires an exact archive checksum and a successful public download.
 
 If an upload was accepted but verification timed out, use a verification-only run instead of uploading again:
 
