@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const { createHash } = require('node:crypto');
 const { test } = require('node:test');
-const { checkContext, verifyMetadata } = require('./release.cjs');
+const { checkContext, verifyMetadata, verifyPublished } = require('./release.cjs');
 
 const manifest = {
   name: '@0xdoublesharp/unsafe-math',
@@ -55,4 +55,81 @@ test('registry verification requires the exact published archive and identity', 
   assert.throws(() => verifyMetadata(metadata, manifest, Buffer.from('different archive')));
   assert.throws(() => verifyMetadata({ ...metadata, version: '0.0.16' }, manifest, bytes));
   assert.throws(() => verifyMetadata({ ...metadata, name: 'different-package' }, manifest, bytes));
+});
+
+test('registry processing may outlast the initial six attempts', async () => {
+  const bytes = Buffer.from('accepted archive');
+  const metadata = {
+    name: manifest.name,
+    version: manifest.version,
+    dist: {
+      integrity: 'sha512-' + createHash('sha512').update(bytes).digest('base64'),
+      tarball: 'https://registry.npmjs.org/archive.tgz',
+    },
+  };
+  let attempts = 0;
+  let waits = 0;
+  await verifyPublished(manifest, bytes, {
+    fetcher: async (url) => {
+      if (url.endsWith('.tgz')) return { ok: true, arrayBuffer: async () => bytes };
+      return ++attempts <= 8 ? { ok: false, status: 404 } : { ok: true, json: async () => metadata };
+    },
+    sleep: async () => {
+      waits++;
+    },
+  });
+  assert.equal(attempts, 9);
+  assert.equal(waits, 8);
+});
+
+test('registry retries are bounded and do not retry authentication failures', async () => {
+  let attempts = 0;
+  const options = {
+    attempts: 3,
+    sleep: async () => {},
+    fetcher: async () => {
+      attempts++;
+      return { ok: false, status: 404 };
+    },
+  };
+  await assert.rejects(verifyPublished(manifest, Buffer.from('archive'), options), /404/);
+  assert.equal(attempts, 3);
+  attempts = 0;
+  await assert.rejects(
+    verifyPublished(manifest, Buffer.from('archive'), {
+      ...options,
+      fetcher: async () => {
+        attempts++;
+        return { ok: false, status: 403 };
+      },
+    }),
+    /403/
+  );
+  assert.equal(attempts, 1);
+});
+
+test('visible metadata is insufficient until the verified archive can be downloaded', async () => {
+  const bytes = Buffer.from('accepted archive');
+  const metadata = {
+    name: manifest.name,
+    version: manifest.version,
+    dist: {
+      integrity: 'sha512-' + createHash('sha512').update(bytes).digest('base64'),
+      tarball: 'https://registry.npmjs.org/archive.tgz',
+    },
+  };
+  let downloads = 0;
+  let waits = 0;
+  await verifyPublished(manifest, bytes, {
+    fetcher: async (url) => {
+      if (!url.endsWith('.tgz')) return { ok: true, json: async () => metadata };
+      if (++downloads <= 2) return { ok: false, status: 404 };
+      return { ok: true, arrayBuffer: async () => bytes };
+    },
+    sleep: async () => {
+      waits++;
+    },
+  });
+  assert.equal(downloads, 3);
+  assert.equal(waits, 2);
 });

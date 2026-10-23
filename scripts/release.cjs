@@ -26,6 +26,45 @@ function verifyMetadata(metadata, manifest, archive) {
   assert.equal(metadata.dist?.integrity, integrity, 'Published archive integrity differs');
 }
 
+async function verifyPublished(
+  manifest,
+  archive,
+  {
+    fetcher = fetch,
+    sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+    attempts = 121,
+    intervalMs = 5000,
+    onPending = () => {},
+  } = {}
+) {
+  const url = `https://registry.npmjs.org/${encodeURIComponent(manifest.name)}/${encodeURIComponent(manifest.version)}`;
+  for (let attempt = 0; attempt < attempts; ++attempt) {
+    let response = await fetcher(url, {
+      headers: { 'Cache-Control': 'no-cache' },
+      signal: AbortSignal.timeout(15000),
+    });
+    if (response.ok) {
+      const metadata = await response.json();
+      verifyMetadata(metadata, manifest, archive);
+      assert.equal(new URL(metadata.dist.tarball).origin, 'https://registry.npmjs.org', 'Unexpected tarball registry');
+      response = await fetcher(metadata.dist.tarball, {
+        headers: { 'Cache-Control': 'no-cache' },
+        signal: AbortSignal.timeout(15000),
+      });
+      if (response.ok) {
+        verifyMetadata(metadata, manifest, Buffer.from(await response.arrayBuffer()));
+        return;
+      }
+    }
+    if (response.status !== 404 || attempt === attempts - 1)
+      throw new Error(
+        `Registry verification failed: HTTP ${response.status}. An accepted upload may still be processing; do not republish it.`
+      );
+    onPending(attempt);
+    await sleep(intervalMs);
+  }
+}
+
 async function main() {
   const manifest = JSON.parse(fs.readFileSync('package.json', 'utf8'));
   const command = process.argv[2];
@@ -62,20 +101,12 @@ async function main() {
     console.log(`Packed ${archive}`);
   } else if (command === 'verify') {
     const archive = fs.readFileSync(process.argv[3]);
-    const url = `https://registry.npmjs.org/${encodeURIComponent(manifest.name)}/${encodeURIComponent(
-      manifest.version
-    )}`;
-    for (let attempt = 0; attempt < 6; ++attempt) {
-      const response = await fetch(url, { headers: { 'Cache-Control': 'no-cache' } });
-      if (response.ok) {
-        verifyMetadata(await response.json(), manifest, archive);
-        console.log(`Verified ${manifest.name}@${manifest.version} on npm, including exact archive integrity.`);
-        return;
-      }
-      if (response.status !== 404 || attempt === 5)
-        throw new Error(`Registry verification failed: HTTP ${response.status}`);
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-    }
+    await verifyPublished(manifest, archive, {
+      onPending: (attempt) => {
+        if (attempt % 12 === 0) console.log('Waiting for npm to finish processing the accepted upload...');
+      },
+    });
+    console.log(`Verified ${manifest.name}@${manifest.version} on npm, including exact archive integrity.`);
   } else {
     throw new Error('Expected release command: check, pack, or verify');
   }
@@ -86,4 +117,4 @@ if (require.main === module)
     console.error(error.message);
     process.exitCode = 1;
   });
-module.exports = { checkContext, verifyMetadata };
+module.exports = { checkContext, verifyMetadata, verifyPublished };
