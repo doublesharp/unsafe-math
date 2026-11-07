@@ -32,8 +32,18 @@ test('incorrect versions, prerelease tags, and shell text are rejected', () => {
   }
 });
 
+test('the upstream repository publishes before and after its transfer to the org', () => {
+  for (const repository of ['doublesharp/unsafe-math', '0xdoublesharp/unsafe-math']) {
+    assert.equal(checkContext({ ...context, repository }), 'refs/tags/v0.0.17');
+    const release = { ...context, repository, eventName: 'release', ref: 'refs/tags/v0.0.17' };
+    assert.equal(checkContext(release), 'refs/tags/v0.0.17');
+  }
+});
+
 test('forks, pull requests, and manual feature branches cannot publish', () => {
-  assert.throws(() => checkContext({ ...context, repository: 'another/unsafe-math' }));
+  for (const repository of ['another/unsafe-math', '0xdoublesharp/another-repo', undefined]) {
+    assert.throws(() => checkContext({ ...context, repository }));
+  }
   assert.throws(() => checkContext({ ...context, eventName: 'pull_request' }));
   assert.throws(() => checkContext({ ...context, ref: 'refs/heads/feature' }));
 });
