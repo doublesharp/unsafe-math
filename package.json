@@ -1,6 +1,6 @@
 {
   "name": "@0xdoublesharp/unsafe-math",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Unchecked arithmetic for Solidity 0.8.0+, with user-defined operators for 0.8.19+",
   "repository": {
     "type": "git",

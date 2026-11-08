@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.0.18, 2026-11-08
+
+- Update Prettier to 3.9.10, pnpm to 12.18.0, Foundry to v1.9.0, and the publishing CLI to npm 12.2.2. Use Node.js 24 for development and CI.
+- Run correctness and coverage checks on Solidity 0.8.38, with its pinned official compiler checksum and commit. Keep primitive compatibility at 0.8.0 and the full API and gas comparisons at 0.8.19.
+- Publish stable GitHub releases through npm trusted publishing with provenance, bounded registry retries, verification-only recovery, and public tarball integrity checks.
+- Point package metadata and publishing at the 0xdoublesharp GitHub organization.
+- Refresh development and release instructions; keep checkouts on backed-up storage and disposable dependencies and build outputs on Scratch.
+- Preserve all arithmetic behavior, Solidity imports, and public APIs.
+
 ## 0.0.17, 2026-10-22
 
 - Add the missing U256 conversions to uint248, uint240, and uint232.
