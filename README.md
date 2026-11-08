@@ -24,7 +24,7 @@ Unchecked `uint256` and `int256` arithmetic for Solidity, plus `U256` and `I256`
 | Operators on unsigned wrappers | `contracts/types/U256.sol` | **0.8.19** |
 | Operators on signed wrappers | `contracts/types/I256.sol` | **0.8.19** |
 
-`PrimitiveUnsafeMath` is standalone and imports no wrapper types. Existing `UnsafeMath` imports keep their full API. Tests run on Solidity **0.8.35**, with separate checks on the actual **0.8.0** and **0.8.19** minimums. Gas comparisons stay pinned to **0.8.19**.
+`PrimitiveUnsafeMath` is standalone and imports no wrapper types. Existing `UnsafeMath` imports keep their full API. Tests run on Solidity **0.8.38**, with separate checks on the actual **0.8.0** and **0.8.19** minimums. Gas comparisons stay pinned to **0.8.19**.
 
 ## Quick start
 
@@ -214,33 +214,35 @@ See the [gas report](GAS_REPORT.md) for all arithmetic results, wrapper overhead
 
 ## Development
 
-Use **Node.js 22**, **pnpm 11.21.0**, and **Foundry v1.8.5**. Tests are native Solidity, with no Hardhat, TypeScript, or forge-std dependency. The launcher downloads pinned native compilers from Solidity's official distribution and verifies their checksums and versions.
+Use **Node.js 24**, **pnpm 12.18.0**, and **Foundry v1.9.0**. Tests are native Solidity, with no Hardhat, TypeScript, or forge-std dependency. The launcher downloads pinned native compilers from Solidity's official distribution and verifies their checksums and versions.
 
-On macOS, put the checkout, dependencies, and temporary files on Scratch:
+On macOS, keep the checkout on the backed-up Data volume. Put dependencies, caches, builds, and temporary files on Scratch. Mount `/Volumes/Scratch` before starting. For a new checkout:
 
 ```sh
-mkdir -p /Volumes/Scratch/unsafe-math/worktrees /Volumes/Scratch/unsafe-math/tmp/dev
+mkdir -p ~/Workspaces/0xdoublesharp /Volumes/Scratch/unsafe-math/tmp/dev/node_modules
 export TMPDIR=/Volumes/Scratch/unsafe-math/tmp/dev
-git clone https://github.com/0xdoublesharp/unsafe-math.git /Volumes/Scratch/unsafe-math/worktrees/dev
-cd /Volumes/Scratch/unsafe-math/worktrees/dev
-nvm use
-pnpm install --frozen-lockfile --store-dir /Volumes/Scratch/unsafe-math/tmp/dev/pnpm-store
+git clone https://github.com/0xdoublesharp/unsafe-math.git ~/Workspaces/0xdoublesharp/unsafe-math
+cd ~/Workspaces/0xdoublesharp/unsafe-math
+nvm install
+ln -s "$TMPDIR/node_modules" node_modules
+pnpm install --frozen-lockfile --store-dir "$TMPDIR/pnpm-store"
 pnpm validate
 ```
 
 | Command | Checks |
 | :--- | :--- |
-| `pnpm test` | Correctness and boundary tests on Solidity 0.8.35; 256 runs per fuzz test |
+| `pnpm test` | Correctness and boundary tests on Solidity 0.8.38; 256 runs per fuzz test |
 | `pnpm test:compat` | Primitive tests on 0.8.0, full correctness suite on 0.8.19 |
 | `pnpm coverage` | Every production file; exact counters must reach 100% |
 | `pnpm test:gas` | Uninstrumented comparisons on 0.8.19, Paris EVM, optimizer disabled |
 | `pnpm check:docs` | Each of the seven examples above compiles on its minimum compiler |
 | `pnpm check:package` | Exact archive contents, extracted full-API compilation, extracted primitive tests |
 | `pnpm test:tools` | Coverage and gas-report gates reject incomplete results |
+| `node --test scripts/release.test.cjs` | Release identity, registry retries, and published archive verification |
 | `pnpm validate` | All of the above, with gas measurements after coverage |
 
-Builds, compilers, caches, and reports default to `/Volumes/Scratch/unsafe-math/build/<checkout>-<path-hash>`. The launcher stops if Scratch is missing. On an ephemeral CI runner, set `UNSAFE_MATH_BUILD_DIR` and `TMPDIR` to absolute disposable directories. CI runs the same locked install and validation command.
+Builds, compilers, caches, and reports default to `/Volumes/Scratch/unsafe-math/build/<checkout>-<path-hash>`. The launcher stops if Scratch is missing. On an ephemeral CI runner, set `UNSAFE_MATH_BUILD_DIR` and `TMPDIR` to absolute disposable directories. CI runs the same locked install and validation command, followed by the release-tooling tests. The publishing workflow runs both before publishing.
 
 Coverage includes all four production files and every conversion width, wrapper, and shift overload. Branch coverage is reported as N/A because the production files have no instrumented branches. Correctness tests explicitly cover the exceptional arithmetic cases described above.
 
-[Changelog](CHANGELOG.md) · [MIT license](LICENSE)
+[Changelog](CHANGELOG.md) · [Release workflow](https://github.com/0xdoublesharp/unsafe-math/blob/main/docs/releasing.md) · [MIT license](LICENSE)

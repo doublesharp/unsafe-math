@@ -1,6 +1,6 @@
 # Gas report
 
-Measured on 2026-10-22 with Foundry v1.8.5 and Solidity 0.8.19+commit.7dd6d404. The target is Paris, with the optimizer disabled and optimizer runs set to zero.
+Measured on 2026-11-08 with Foundry v1.9.0 and Solidity 0.8.19+commit.7dd6d404. The target is Paris, with the optimizer disabled and optimizer runs set to zero.
 
 All **97 comparisons passed** after the coverage run. The 55 arithmetic comparisons assert equal results and lower gas than checked Solidity. The other 42 compare results and record wrapper overhead without requiring a saving.
 
@@ -67,6 +67,6 @@ pnpm test:gas
 pnpm validate
 ```
 
-`test:gas` explicitly selects Solidity 0.8.19 regardless of the 0.8.35 correctness-test default. Coverage instrumentation never supplies the gas measurements. The report parser requires exactly 97 successful tests, both measurements for every test, and the full expected operation list. It clears old reports before each run.
+`test:gas` explicitly selects Solidity 0.8.19 regardless of the 0.8.38 correctness-test default. Coverage instrumentation never supplies the gas measurements. The report parser requires exactly 97 successful tests, both measurements for every test, and the full expected operation list. It clears old reports before each run.
 
 Raw test output and measurement JSON remain under `<UNSAFE_MATH_BUILD_DIR>/gas/` on Scratch. Only this summary and the chart belong in the package. The readings apply to the compiler settings above; benchmark the contracts and settings you deploy.

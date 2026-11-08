@@ -1,6 +1,6 @@
 # Publishing to npm from GitHub
 
-The `publish.yml` workflow publishes stable GitHub releases to npm using OpenID Connect. No npm token secret or local npm login is required for a configured trusted publisher. Dependencies and validation use pnpm; the final publish uses the pinned npm CLI for its OIDC support.
+The `publish.yml` workflow publishes stable GitHub releases to npm using OpenID Connect. No npm token secret or local npm login is required for a configured trusted publisher. Validation uses Node.js 24, pnpm 12.18.0, and Foundry v1.9.0; the final publish uses npm 12.2.2 for its OIDC support.
 
 ## One-time npm setup
 
@@ -18,22 +18,22 @@ Use the filename only, including `.yml`. The workflow lives at `.github/workflow
 
 ## Future releases
 
-1. Update `package.json` and the changelog. Merge the validated source to `main`.
-2. Create a stable `vX.Y.Z` tag matching the package version and publish its GitHub release.
+1. Update `package.json`, the changelog, and affected documentation. Run `pnpm install --frozen-lockfile`, `pnpm validate`, and `node --test scripts/release.test.cjs`. Merge or push the validated source to `main`.
+2. Create and push a stable `vX.Y.Z` tag matching the package version, then publish its GitHub release. Publishing the release triggers the npm workflow; pushing the tag alone does not.
 3. The workflow checks the tag, source history, and packaged files; runs the full validation suite; packs the source; and publishes with provenance.
 4. Its final step verifies the npm package's name and version, downloads its public tarball, and checks the archive integrity against the uploaded archive.
 
 Draft releases, prereleases, forks, and manual runs from feature branches cannot publish through this workflow. Development CI does not publish.
 
-## Publish the existing v0.0.17 release
+## Manual publishing and recovery
 
-The release predates the workflow, so run it manually after adding the npm trusted publisher:
+To publish a stable tag manually, run the workflow from `main`. For example, for version 0.0.18:
 
 ```sh
-gh workflow run publish.yml --repo 0xdoublesharp/unsafe-math --ref main -f tag=v0.0.17
+gh workflow run publish.yml --repo 0xdoublesharp/unsafe-math --ref main -f tag=v0.0.18
 ```
 
-The same operation is available under GitHub Actions, Publish to npm, Run workflow. Select `main` and enter `v0.0.17`.
+The same operation is available under GitHub Actions, Publish to npm, Run workflow. Select `main` and enter `v0.0.18`.
 
 Manual recovery uses the current main workflow, checks that the selected tag is in main's history, and requires all packaged files to match that tag. New workflow and release-helper files do not change the package contents. Existing tags remain unchanged. npm will reject an already-published version.
 
@@ -42,7 +42,7 @@ If npm rejects authentication, verify the trusted publisher fields, direct-publi
 If an upload was accepted but verification timed out, use a verification-only run instead of uploading again:
 
 ```sh
-gh workflow run publish.yml --repo 0xdoublesharp/unsafe-math --ref main -f tag=v0.0.17 -f verify_only=true
+gh workflow run publish.yml --repo 0xdoublesharp/unsafe-math --ref main -f tag=v0.0.18 -f verify_only=true
 ```
 
 This runs validation, packing, and registry verification while skipping publication. Published versions cannot be overwritten.
