@@ -2,7 +2,14 @@
   "name": "@0xdoublesharp/unsafe-math",
   "version": "0.0.17",
   "description": "Unchecked arithmetic for Solidity 0.8.0+, with user-defined operators for 0.8.19+",
-  "repository": "https://github.com/doublesharp/unsafe-math",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0xdoublesharp/unsafe-math.git"
+  },
+  "bugs": {
+    "url": "https://github.com/0xdoublesharp/unsafe-math/issues"
+  },
+  "homepage": "https://github.com/0xdoublesharp/unsafe-math#readme",
   "scripts": {
     "compile": "node scripts/forge.cjs build",
     "test": "node scripts/forge.cjs test --no-match-contract GasSavingsTest",

@@ -6,14 +6,14 @@ const { checkContext, verifyMetadata, verifyPublished } = require('./release.cjs
 const manifest = {
   name: '@0xdoublesharp/unsafe-math',
   version: '0.0.17',
-  repository: 'https://github.com/doublesharp/unsafe-math',
+  repository: { type: 'git', url: 'git+https://github.com/0xdoublesharp/unsafe-math.git' },
 };
 const context = {
   manifest,
   tag: 'v0.0.17',
   eventName: 'workflow_dispatch',
   ref: 'refs/heads/main',
-  repository: 'doublesharp/unsafe-math',
+  repository: '0xdoublesharp/unsafe-math',
   release: {},
 };
 
@@ -29,14 +29,6 @@ test('published stable releases must run on their matching tag', () => {
 test('incorrect versions, prerelease tags, and shell text are rejected', () => {
   for (const tag of ['v0.0.16', '0.0.17', 'v0.0.17-rc.1', 'v00.0.17', 'v0.0.17; echo bad']) {
     assert.throws(() => checkContext({ ...context, tag }));
-  }
-});
-
-test('the upstream repository publishes before and after its transfer to the org', () => {
-  for (const repository of ['doublesharp/unsafe-math', '0xdoublesharp/unsafe-math']) {
-    assert.equal(checkContext({ ...context, repository }), 'refs/tags/v0.0.17');
-    const release = { ...context, repository, eventName: 'release', ref: 'refs/tags/v0.0.17' };
-    assert.equal(checkContext(release), 'refs/tags/v0.0.17');
   }
 });
 

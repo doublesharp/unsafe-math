@@ -8,7 +8,7 @@ Open the package's [npm access settings](https://www.npmjs.com/package/@0xdouble
 
 | Field | Value |
 | :--- | :--- |
-| Organization or user | `doublesharp` |
+| Organization or user | `0xdoublesharp` |
 | Repository | `unsafe-math` |
 | Workflow filename | `publish.yml` |
 | Environment | Leave blank |
@@ -30,7 +30,7 @@ Draft releases, prereleases, forks, and manual runs from feature branches cannot
 The release predates the workflow, so run it manually after adding the npm trusted publisher:
 
 ```sh
-gh workflow run publish.yml --repo doublesharp/unsafe-math --ref main -f tag=v0.0.17
+gh workflow run publish.yml --repo 0xdoublesharp/unsafe-math --ref main -f tag=v0.0.17
 ```
 
 The same operation is available under GitHub Actions, Publish to npm, Run workflow. Select `main` and enter `v0.0.17`.
@@ -42,7 +42,7 @@ If npm rejects authentication, verify the trusted publisher fields, direct-publi
 If an upload was accepted but verification timed out, use a verification-only run instead of uploading again:
 
 ```sh
-gh workflow run publish.yml --repo doublesharp/unsafe-math --ref main -f tag=v0.0.17 -f verify_only=true
+gh workflow run publish.yml --repo 0xdoublesharp/unsafe-math --ref main -f tag=v0.0.17 -f verify_only=true
 ```
 
 This runs validation, packing, and registry verification while skipping publication. Published versions cannot be overwritten.

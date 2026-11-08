@@ -4,11 +4,10 @@ const path = require('node:path');
 const { createHash } = require('node:crypto');
 const { execFileSync } = require('node:child_process');
 
-// The upstream repository, before and after its transfer to the 0xdoublesharp org.
-const UPSTREAM_REPOSITORIES = ['doublesharp/unsafe-math', '0xdoublesharp/unsafe-math'];
+const UPSTREAM_REPOSITORY = '0xdoublesharp/unsafe-math';
 
 function checkContext({ manifest, tag, eventName, ref, repository, release = {} }) {
-  assert.ok(UPSTREAM_REPOSITORIES.includes(repository), 'Publishing is restricted to the upstream repository');
+  assert.equal(repository, UPSTREAM_REPOSITORY, 'Publishing is restricted to the upstream repository');
   assert.equal(manifest.name, '@0xdoublesharp/unsafe-math', 'Unexpected package identity');
   assert.match(tag || '', /^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/, 'A stable vX.Y.Z tag is required');
   assert.equal(tag, `v${manifest.version}`, 'Release tag and package version differ');

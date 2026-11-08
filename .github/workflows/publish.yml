@@ -23,10 +23,9 @@ concurrency:
 
 jobs:
   publish:
-    # Publish only from the upstream repository, before and after its transfer
-    # to the 0xdoublesharp org. Forks never publish.
+    # Publish only from the upstream repository. Forks never publish.
     if: >-
-      contains(fromJSON('["doublesharp/unsafe-math", "0xdoublesharp/unsafe-math"]'), github.repository) &&
+      github.repository == '0xdoublesharp/unsafe-math' &&
       !github.event.repository.fork &&
       ((github.event_name == 'release' && !github.event.release.draft && !github.event.release.prerelease) ||
        (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'))
