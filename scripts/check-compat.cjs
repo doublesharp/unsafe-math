@@ -9,7 +9,10 @@ async function testPrimitive(dir, dependencyRoot) {
   const sources = {
     'Primitive.t.sol': fs
       .readFileSync(path.join(root, 'test/Primitive.t.sol'), 'utf8')
-      .replace("'../contracts/PrimitiveUnsafeMath.sol'", "'@0xdoublesharp/unsafe-math/contracts/PrimitiveUnsafeMath.sol'"),
+      .replace(
+        "'../contracts/PrimitiveUnsafeMath.sol'",
+        "'@0xdoublesharp/unsafe-math/contracts/PrimitiveUnsafeMath.sol'"
+      ),
     'TestBase.sol': fs.readFileSync(path.join(root, 'test/TestBase.sol'), 'utf8'),
   };
   await compileConsumer(dir, sources, dependencyRoot, { version: '0.8.0', test: true });

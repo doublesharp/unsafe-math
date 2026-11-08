@@ -4,7 +4,7 @@ const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
 const { outputDir } = require('./paths.cjs');
 
-const commits = { '0.8.0': 'c7dfd78e', '0.8.19': '7dd6d404', '0.8.35': '47b9dedd' };
+const commits = { '0.8.0': 'c7dfd78e', '0.8.19': '7dd6d404', '0.8.38': '1835d247' };
 const platforms = { darwin: 'macosx-amd64', linux: 'linux-amd64', win32: 'windows-amd64' };
 
 function verifyVersion(binary, version) {
@@ -22,7 +22,7 @@ async function download(url) {
   return Buffer.from(await response.arrayBuffer());
 }
 
-async function ensureSolc(version = '0.8.35') {
+async function ensureSolc(version = '0.8.38') {
   const commit = commits[version];
   if (!commit) throw new Error(`Unsupported compiler version: ${version}`);
   if (process.env.UNSAFE_MATH_SOLC) return verifyVersion(path.resolve(process.env.UNSAFE_MATH_SOLC), version);

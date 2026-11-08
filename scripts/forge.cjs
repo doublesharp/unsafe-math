@@ -10,10 +10,10 @@ async function runForge(args, options = {}) {
   const temp = path.join(outputDir, 'tmp');
   fs.mkdirSync(temp, { recursive: true });
   const info = execFileSync('forge', ['--version'], { encoding: 'utf8' });
-  if (!/forge Version: 1\.8\.5(?:-|\s)/.test(info))
-    throw new Error('Install Foundry v1.8.5 to reproduce this release.');
+  if (!/forge Version: 1\.9\.0(?:-|\s)/.test(info))
+    throw new Error('Install Foundry v1.9.0 to reproduce this release.');
   const env = { ...process.env, UNSAFE_MATH_BUILD_DIR: outputDir, TMPDIR: temp };
-  if (args[0] !== 'fmt') env.FOUNDRY_SOLC_VERSION = await ensureSolc(options.version || '0.8.35');
+  if (args[0] !== 'fmt') env.FOUNDRY_SOLC_VERSION = await ensureSolc(options.version || '0.8.38');
   const result = spawnSync('forge', [...args, '--root', options.root || root], {
     cwd: options.root || root,
     env,

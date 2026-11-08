@@ -36,7 +36,7 @@
   "author": "@0xDoubleSharp",
   "license": "MIT",
   "devDependencies": {
-    "prettier": "2.8.7"
+    "prettier": "3.9.10"
   },
   "files": [
     "contracts/UnsafeMath.sol",
@@ -48,5 +48,5 @@
     "LICENSE",
     "CHANGELOG.md"
   ],
-  "packageManager": "pnpm@11.21.0"
+  "packageManager": "pnpm@12.18.0"
 }

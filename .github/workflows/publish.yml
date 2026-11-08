@@ -44,13 +44,13 @@ jobs:
         run: node scripts/release.cjs check
       - uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: v1.8.5
+          version: v1.9.0
       - uses: pnpm/action-setup@v4
         with:
-          version: 11.21.0
+          version: 12.18.0
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org
       - name: Configure disposable outputs
         run: |
@@ -60,7 +60,7 @@ jobs:
             echo "npm_config_cache=$RUNNER_TEMP/npm-cache"
           } >> "$GITHUB_ENV"
       - name: Install OIDC-capable npm CLI
-        run: npm install --global npm@11.19.1 --ignore-scripts
+        run: npm install --global npm@12.2.2 --ignore-scripts
       - run: pnpm install --frozen-lockfile
       - name: Validate release
         run: |
