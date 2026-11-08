@@ -221,7 +221,7 @@ On macOS, put the checkout, dependencies, and temporary files on Scratch:
 ```sh
 mkdir -p /Volumes/Scratch/unsafe-math/worktrees /Volumes/Scratch/unsafe-math/tmp/dev
 export TMPDIR=/Volumes/Scratch/unsafe-math/tmp/dev
-git clone https://github.com/doublesharp/unsafe-math.git /Volumes/Scratch/unsafe-math/worktrees/dev
+git clone https://github.com/0xdoublesharp/unsafe-math.git /Volumes/Scratch/unsafe-math/worktrees/dev
 cd /Volumes/Scratch/unsafe-math/worktrees/dev
 nvm use
 pnpm install --frozen-lockfile --store-dir /Volumes/Scratch/unsafe-math/tmp/dev/pnpm-store
