@@ -42,9 +42,12 @@ jobs:
           persist-credentials: false
       - name: Check release identity and source
         run: node scripts/release.cjs check
-      - uses: foundry-rs/foundry-toolchain@v1
+      - uses: doublesharp/foundry@e80dc641c6927578663b79fa4892d183febb3b11 # setup-forgeds-v1.0.1
         with:
-          version: v1.9.0
+          forgeds-version: 4ca15fcba25aa61a1b436d28b428e30b459f3d56
+          forge-alias: 'true'
+          cache-compilers: 'true'
+          cache-prefix: unsafe-math
       - uses: pnpm/action-setup@v4
         with:
           version: 12.18.0

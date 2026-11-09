@@ -17,12 +17,12 @@ Unchecked `uint256` and `int256` arithmetic for Solidity, plus `U256` and `I256`
 
 ## Choose your API
 
-| You need | Import from `@0xdoublesharp/unsafe-math/` | Minimum Solidity |
-| :--- | :--- | :--- |
-| Arithmetic on ordinary integers | `contracts/PrimitiveUnsafeMath.sol` | **0.8.0** |
-| Arithmetic, wrapper helpers, casts, and shifts | `contracts/UnsafeMath.sol` | **0.8.19** |
-| Operators on unsigned wrappers | `contracts/types/U256.sol` | **0.8.19** |
-| Operators on signed wrappers | `contracts/types/I256.sol` | **0.8.19** |
+| You need                                       | Import from `@0xdoublesharp/unsafe-math/` | Minimum Solidity |
+| :--------------------------------------------- | :---------------------------------------- | :--------------- |
+| Arithmetic on ordinary integers                | `contracts/PrimitiveUnsafeMath.sol`       | **0.8.0**        |
+| Arithmetic, wrapper helpers, casts, and shifts | `contracts/UnsafeMath.sol`                | **0.8.19**       |
+| Operators on unsigned wrappers                 | `contracts/types/U256.sol`                | **0.8.19**       |
+| Operators on signed wrappers                   | `contracts/types/I256.sol`                | **0.8.19**       |
 
 `PrimitiveUnsafeMath` is standalone and imports no wrapper types. Existing `UnsafeMath` imports keep their full API. Tests run on Solidity **0.8.38**, with separate checks on the actual **0.8.0** and **0.8.19** minimums. Gas comparisons stay pinned to **0.8.19**.
 
@@ -214,7 +214,7 @@ See the [gas report](GAS_REPORT.md) for all arithmetic results, wrapper overhead
 
 ## Development
 
-Use **Node.js 24**, **pnpm 12.18.0**, and **Foundry v1.9.0**. Tests are native Solidity, with no Hardhat, TypeScript, or forge-std dependency. The launcher downloads pinned native compilers from Solidity's official distribution and verifies their checksums and versions.
+Use **Node.js 24** and **pnpm 12.18.0**. CI installs checksum-verified prebuilt forgeds at commit `4ca15fcba25aa61a1b436d28b428e30b459f3d56` through [Setup forgeds and Solar](https://github.com/marketplace/actions/setup-forgeds-and-solar). The launcher also supports **Foundry v1.9.0**. Tests are native Solidity, with no Hardhat, TypeScript, or forge-std dependency. The launcher downloads pinned native compilers from Solidity's official distribution and verifies their checksums and versions.
 
 On macOS, keep the checkout on the backed-up Data volume. Put dependencies, caches, builds, and temporary files on Scratch. Mount `/Volumes/Scratch` before starting. For a new checkout:
 
@@ -229,17 +229,17 @@ pnpm install --frozen-lockfile --store-dir "$TMPDIR/pnpm-store"
 pnpm validate
 ```
 
-| Command | Checks |
-| :--- | :--- |
-| `pnpm test` | Correctness and boundary tests on Solidity 0.8.38; 256 runs per fuzz test |
-| `pnpm test:compat` | Primitive tests on 0.8.0, full correctness suite on 0.8.19 |
-| `pnpm coverage` | Every production file; exact counters must reach 100% |
-| `pnpm test:gas` | Uninstrumented comparisons on 0.8.19, Paris EVM, optimizer disabled |
-| `pnpm check:docs` | Each of the seven examples above compiles on its minimum compiler |
-| `pnpm check:package` | Exact archive contents, extracted full-API compilation, extracted primitive tests |
-| `pnpm test:tools` | Coverage and gas-report gates reject incomplete results |
-| `node --test scripts/release.test.cjs` | Release identity, registry retries, and published archive verification |
-| `pnpm validate` | All of the above, with gas measurements after coverage |
+| Command                                | Checks                                                                            |
+| :------------------------------------- | :-------------------------------------------------------------------------------- |
+| `pnpm test`                            | Correctness and boundary tests on Solidity 0.8.38; 256 runs per fuzz test         |
+| `pnpm test:compat`                     | Primitive tests on 0.8.0, full correctness suite on 0.8.19                        |
+| `pnpm coverage`                        | Every production file; exact counters must reach 100%                             |
+| `pnpm test:gas`                        | Uninstrumented comparisons on 0.8.19, Paris EVM, optimizer disabled               |
+| `pnpm check:docs`                      | Each of the seven examples above compiles on its minimum compiler                 |
+| `pnpm check:package`                   | Exact archive contents, extracted full-API compilation, extracted primitive tests |
+| `pnpm test:tools`                      | Coverage and gas-report gates reject incomplete results                           |
+| `node --test scripts/release.test.cjs` | Release identity, registry retries, and published archive verification            |
+| `pnpm validate`                        | All of the above, with gas measurements after coverage                            |
 
 Builds, compilers, caches, and reports default to `/Volumes/Scratch/unsafe-math/build/<checkout>-<path-hash>`. The launcher stops if Scratch is missing. On an ephemeral CI runner, set `UNSAFE_MATH_BUILD_DIR` and `TMPDIR` to absolute disposable directories. CI runs the same locked install and validation command, followed by the release-tooling tests. The publishing workflow runs both before publishing.
 

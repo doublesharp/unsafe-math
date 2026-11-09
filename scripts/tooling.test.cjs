@@ -4,6 +4,7 @@ const path = require('node:path');
 const { test } = require('node:test');
 const { verifyCoverage, files, functionCounts } = require('./check-coverage.cjs');
 const { parseGas } = require('./gas-report.cjs');
+const { verifyForge } = require('./forge.cjs');
 
 function completeCoverage() {
   const rows = files.map(
@@ -108,4 +109,22 @@ test('gas report rejects duplicates and unexpected comparisons', () => {
   const extra = gasFixture();
   extra.suite.test_results.unexpected = { status: 'Success', decoded_logs: [] };
   assert.throws(() => parseGas(extra));
+});
+
+test('launcher accepts the pinned fork under either executable name and the supported upstream release', () => {
+  const commit = '4ca15fcba25aa61a1b436d28b428e30b459f3d56';
+  for (const name of ['forge', 'forgeds']) {
+    assert.equal(verifyForge(`${name} Version: 1.9.1-dev\nCommit SHA: ${commit}\n`), true);
+  }
+  assert.equal(verifyForge('forge Version: 1.9.0\nCommit SHA: upstream\n'), false);
+});
+
+test('launcher rejects an unpinned fork and other upstream versions', () => {
+  for (const info of [
+    'forge Version: 1.9.1-dev\nCommit SHA: ' + 'a'.repeat(40) + '\n',
+    'forge Version: 1.8.5\n',
+    'unrelated forge Version: 1.9.0\n',
+  ]) {
+    assert.throws(() => verifyForge(info), /Install forgeds commit/);
+  }
 });
